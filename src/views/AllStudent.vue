@@ -1,18 +1,43 @@
 <template>
-  <a-table
-    :columns="columns"
-    :rowKey="user => user.id"
-    :dataSource="data"
-    :pagination="pagination"
-    :loading="loading"
-    @change="handleTableChange"
-  >
-  </a-table>
+  <div>
+    <div class="search_box">
+      <a-input-search placeholder="键入学号或姓名进行模糊搜索" @search="onSearch" enterButton/>
+    </div>
+    <a-table
+      :columns="columns"
+      :rowKey="user => user.id"
+      :dataSource="data"
+      :pagination="pagination"
+      :loading="loading"
+      @change="handleTableChange"
+    >
+      <template slot="action" slot-scope="text">
+        <a @click="detail(text)">查看详情</a>
+      </template>
+    </a-table>
+    <a-modal title="查看详情" :width="750" :maskClosable="false" v-model="isModalVisible"
+             @cancel="handleModalCancel">
+      <template slot="footer">
+        <a-popconfirm
+          title="确定删除该学生？"
+          @confirm="handleDelStudent"
+          okText="确定"
+          cancelText="取消"
+        >
+          <a-button type="danger">
+            删除该学生
+          </a-button>
+        </a-popconfirm>
+      </template>
+      <student-info-model v-model="showDetailObj"/>
+    </a-modal>
+  </div>
 </template>
 
 <script>
     import {Get} from "../http";
     import {API} from "../api";
+    import StudentInfoModel from "../components/StudentInfoModel";
 
     const columns = [
         {
@@ -43,9 +68,16 @@
             title: '邮箱',
             dataIndex: 'email'
         },
+        {
+            title: '操作',
+            key: 'operation',
+            width: 155,
+            scopedSlots: {customRender: 'action'}
+        },
     ];
     export default {
         name: "AllStudent",
+        components: {StudentInfoModel},
         data() {
             return {
                 data: [],
@@ -60,10 +92,27 @@
                     pageSizeOptions: ['10', '30', '50', '70', '100']
                 },
                 loading: false,
+                isModalVisible: false,
+                showDetailObj: {},
                 columns,
             };
         },
         methods: {
+            handleDelStudent() {
+                // TODO 删除学生
+                console.log("删除ID" + this.showDetailObj.id);
+            },
+            handleModalCancel() {
+                this.showDetailObj = {};
+            },
+            detail(obj) {
+                this.showDetailObj = obj;
+                this.isModalVisible = true;
+            },
+            onSearch(value) {
+                // TODO 模糊搜索
+                console.log(value);
+            },
             handleTableChange(pagination, filters, sorter) {
                 const pager = {...this.pagination};
                 pager.current = pagination.current;
@@ -100,5 +149,8 @@
 </script>
 
 <style scoped>
-
+  .search_box {
+    padding: 0 10px 0 10px;
+    background-color: rgb(255, 255, 255);
+  }
 </style>
