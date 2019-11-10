@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import AllStudent from '../views/AllStudent.vue'
 
 Vue.use(VueRouter);
 
 const routes = [
     {
         path: '/',
-        name: 'home',
-        component: AllStudent
+        redirect: '/student'
     },
     {
         path: '/apartment',
@@ -17,6 +15,16 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "apartment" */ '../views/AllApartment.vue')
+    },
+    {
+        path: '/student',
+        name: 'student',
+        component: () => import(/* webpackChunkName: "student" */ '../views/AllStudent.vue')
+    },
+    {
+        path: '/new_student',
+        name: 'NewStudent',
+        component: () => import(/* webpackChunkName: "new_student" */ '../views/NewStudent.vue')
     }
 ];
 

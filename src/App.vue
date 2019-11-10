@@ -6,7 +6,7 @@
           <img class="logo" :src="`${publicPath}logo.png`" alt="logo img"/>
         </div>
         <a-menu theme="dark" mode="inline" v-model="selectedMenuKeys">
-          <a-menu-item key="all_student" @click="pushRouter('/')">
+          <a-menu-item key="all_student" @click="pushRouter('/student')">
             <a-icon type="profile"/>
             <span>学生查询</span>
           </a-menu-item>
@@ -113,15 +113,5 @@
 </style>
 
 <style>
-  /*内容*/
-  .content-style {
-    margin: 24px 16px;
-    padding: 24px;
-    background: #fff;
-    min-height: 280px;
-  }
 
-  .ant-table-fixed-right {
-    z-index: 999;
-  }
 </style>

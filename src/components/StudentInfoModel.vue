@@ -26,7 +26,9 @@
                @modelOk="handleModelOk">
       <template v-slot:edit_model>
         <a-select :defaultValue="apartmentId" style="width: 120px" @change="handleApartmentChange">
-          <a-select-option v-for="apartment in apartmentData" :key="apartment.id" :value="apartment.id">{{apartment.name}}</a-select-option>
+          <a-select-option v-for="apartment in apartmentData" :key="apartment.id" :value="apartment.id">
+            {{apartment.name}}
+          </a-select-option>
         </a-select>
       </template>
     </InputEdit>
@@ -95,6 +97,7 @@
                             apartment: {id: this.editData.apartmentId}
                         }
                     ).do(response => {
+                    this.$message.success('修改成功');
                 });
                 this.value.apartment.name = (this.apartmentData.filter(a => a.id === this.editData.apartmentId))[0].name
             },
