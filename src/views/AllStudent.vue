@@ -105,6 +105,7 @@
             },
             handleModalCancel() {
                 this.showDetailObj = {};
+                this.getData();
             },
             detail(obj) {
                 this.showDetailObj = obj;

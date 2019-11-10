@@ -50,7 +50,7 @@
 
 <script>
     import InputEdit from "./InputEdit";
-    import {Get} from "../http";
+    import {Get, Patch} from "../http";
     import {API} from "../api";
 
     export default {
@@ -81,18 +81,39 @@
         },
         methods: {
             handleApartmentChange(v) {
+                console.log(v);
                 this.editData.apartmentId = v;
             },
             handleModelOk() {
-                // TODO 修改公寓信息
+                console.log(1);
+                Patch(API.update_user)
+                    .withSuccessCode(204)
+                    .withJSONData(
+                        {
+                            id: this.value.id,
+                            apartment: {id: this.editData.apartmentId}
+                        }
+                    ).do(response => {
+                });
                 this.value.apartment.name = (this.apartmentData.filter(a => a.id === this.editData.apartmentId))[0].name
             },
             handleSubmit(id, valueKey, value) {
                 if (this.value[valueKey] === value) {
                     return;
                 }
-                // TODO 修改学生信息
-                console.log(id, valueKey, value)
+                if (valueKey === "sex") {
+                    value = value === '男'
+                }
+                console.log(id, valueKey, value);
+                let data = {};
+                data["id"] = id;
+                data[valueKey] = value;
+                Patch(API.update_user)
+                    .withSuccessCode(204)
+                    .withJSONData(data)
+                    .do(response => {
+                        console.log(response)
+                    });
             },
             initApartmentData() {
                 Get(API.apartment).do(response => {
@@ -102,6 +123,7 @@
         },
         mounted() {
             this.initApartmentData();
+            this.editData.apartmentId = this.value.apartment.id;
         }
     }
 </script>

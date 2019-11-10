@@ -6,5 +6,6 @@ export const API = {
     apartment: SERVER_HOST + "/apartments",
     search: {
         users: SERVER_HOST + "/search/users/"
-    }
+    },
+    update_user: SERVER_HOST + "/user"
 };

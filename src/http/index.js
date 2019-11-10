@@ -130,6 +130,10 @@ _request.prototype.withSuccessCode = function (code) {
     this.code = code;
     return this;
 };
+_request.prototype.withJSONData = function (params) {
+    this.jsonData = params;
+    return this;
+};
 
 _request.prototype.withURLSearchParams = function (params) {
     let urlSearchParams = new URLSearchParams();
@@ -207,6 +211,8 @@ _request.prototype.do = function (fn) {
                 promise = instance.patch(this.url, this.urlSearchParams);
             } else if (this.formData !== undefined) {
                 promise = instance.patch(this.url, this.formData, {headers: {'content-type': 'multipart/form-data'}});
+            } else if (this.jsonData !== undefined) {
+                promise = instance.patch(this.url, this.jsonData);
             } else {
                 promise = instance.patch(this.url);
             }
