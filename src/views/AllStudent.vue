@@ -35,7 +35,7 @@
 </template>
 
 <script>
-    import {Get} from "../http";
+    import {Del, Get} from "../http";
     import {API} from "../api";
     import StudentInfoModel from "../components/StudentInfoModel";
 
@@ -100,8 +100,12 @@
         },
         methods: {
             handleDelStudent() {
-                // TODO 删除学生
-                console.log("删除ID" + this.showDetailObj.id);
+                console.log("删除ID:" + this.showDetailObj.id);
+                Del(API.del_user + this.showDetailObj.id).withSuccessCode(204).do(Response => {
+                    this.$message.success('成功删除');
+                    this.isModalVisible = false;
+                    this.handleModalCancel();
+                })
             },
             handleModalCancel() {
                 this.showDetailObj = {};
@@ -117,6 +121,7 @@
                     this.getData();
                     return;
                 }
+                console.log("搜索：" + value);
                 this.nowApi = API.search.users + value;
                 this.getData();
             },

@@ -7,5 +7,6 @@ export const API = {
     search: {
         users: SERVER_HOST + "/search/users/"
     },
-    update_user: SERVER_HOST + "/user"
+    update_user: SERVER_HOST + "/user",
+    del_user: SERVER_HOST + "/user/"
 };
