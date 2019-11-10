@@ -10,33 +10,17 @@
             <a-icon type="profile"/>
             <span>学生查询</span>
           </a-menu-item>
-          <a-menu-item key="review" @click="pushRouter('/review')">
+          <a-menu-item key="review" @click="pushRouter('/new_student')">
             <a-icon type="plus"/>
             <span>新增学生</span>
           </a-menu-item>
-          <a-menu-item key="plan_list" @click="pushRouter('/plan_list')">
+          <a-menu-item key="plan_list" @click="pushRouter('/apartment')">
             <a-icon type="align-left"/>
-            <span>寝室查询</span>
+            <span>公寓管理</span>
           </a-menu-item>
           <a-menu-item key="export" @click="pushRouter('/export')">
             <a-icon type="download"/>
             <span>请假查询</span>
-          </a-menu-item>
-          <a-menu-item key="discount" @click="pushRouter('/discount')">
-            <a-icon type="edit"/>
-            <span>折扣管理</span>
-          </a-menu-item>
-          <a-menu-item key="office_review" @click="pushRouter('/office_review')">
-            <a-icon type="profile"/>
-            <span>我的审核</span>
-          </a-menu-item>
-          <a-menu-item key="buy" @click="pushRouter('/buy')">
-            <a-icon type="profile"/>
-            <span>我的购书</span>
-          </a-menu-item>
-          <a-menu-item key="add" @click="pushRouter('/add')">
-            <a-icon type="edit"/>
-            <span>填写购书信息</span>
           </a-menu-item>
         </a-menu>
       </a-layout-sider>

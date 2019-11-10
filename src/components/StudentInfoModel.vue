@@ -26,7 +26,7 @@
                @modelOk="handleModelOk">
       <template v-slot:edit_model>
         <a-select :defaultValue="apartmentId" style="width: 120px" @change="handleApartmentChange">
-          <a-select-option v-for="apartment in apartmentData" :value="apartment.id">{{apartment.name}}</a-select-option>
+          <a-select-option v-for="apartment in apartmentData" :key="apartment.id" :value="apartment.id">{{apartment.name}}</a-select-option>
         </a-select>
       </template>
     </InputEdit>

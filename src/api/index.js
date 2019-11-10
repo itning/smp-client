@@ -8,5 +8,8 @@ export const API = {
         users: SERVER_HOST + "/search/users/"
     },
     update_user: SERVER_HOST + "/user",
-    del_user: SERVER_HOST + "/user/"
+    del_user: SERVER_HOST + "/user/",
+    update_apartment: SERVER_HOST + "/apartment",
+    del_apartment: SERVER_HOST + "/apartment/",
+    add_apartment: SERVER_HOST + "/apartment",
 };
