@@ -5,17 +5,11 @@
     <InputEdit class="input_edit" name="学号" :must-integer="true" value-key="studentId" :value="value.studentId"
                :valueId="value.id"
                @submit="handleSubmit"/>
-    <InputEdit class="input_edit" name="性别" :nullable="false" value-key="sex" :inputRange="['男','女']" :value="value.sex"
-               :valueId="value.id"
-               @submit="handleSubmit"/>
     <InputEdit class="input_edit" name="电话" :must-integer="true" value-key="tel" :value="value.tel" :valueId="value.id"
                @submit="handleSubmit"/>
     <InputEdit class="input_edit" name="邮箱" value-key="email"
                :regular="/^([A-Za-z0-9_\-\.\u4e00-\u9fa5])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,8})$/"
                :value="value.email" :valueId="value.id" @submit="handleSubmit"/>
-    <InputEdit class="input_edit" name="年龄" value-key="age" :nullable="false" :value="value.age" :must-integer="true"
-               :valueId="value.id"
-               @submit="handleSubmit"/>
     <InputEdit class="input_edit" name="民族" value-key="ethnic" :input-range="ethnicRangeData" :nullable="false"
                :value="value.ethnic"
                :valueId="value.id"
@@ -36,8 +30,7 @@
         </a-select>
       </template>
     </InputEdit>
-    <InputEdit class="input_edit" name="身份证号" value-key="idCard" :nullable="false" :must-integer="true"
-               :value="value.idCard"
+    <InputEdit class="input_edit" name="身份证号" value-key="idCard" :nullable="false" :value="value.idCard"
                :valueId="value.id"
                @submit="handleSubmit"/>
     <InputEdit class="input_edit" name="政治面貌" :input-range="politicalRangeData" value-key="politicalStatus"
