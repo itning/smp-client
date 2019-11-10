@@ -38,6 +38,10 @@
     import {Del, Get} from "../http";
     import {API} from "../api";
     import StudentInfoModel from "../components/StudentInfoModel";
+    import moment from 'moment';
+    import 'moment/locale/zh-cn';
+
+    moment.locale('zh-cn');
 
     const columns = [
         {
@@ -51,6 +55,14 @@
         {
             title: '性别',
             dataIndex: 'sex'
+        },
+        {
+            title: '年龄',
+            dataIndex: 'age'
+        },
+        {
+            title: '出生日期',
+            dataIndex: 'birthday'
         },
         {
             title: '公寓',
@@ -145,6 +157,7 @@
                         pagination.total = response.data.data.totalElements;
                         this.data = response.data.data.content.map(u => {
                             u.sex = u.sex ? "男" : "女";
+                            u.birthday = moment(u.birthday).format("YYYY年MM月DD日");
                             return u;
                         });
                         this.pagination = pagination;
