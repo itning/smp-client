@@ -12,4 +12,5 @@ export const API = {
     update_apartment: SERVER_HOST + "/apartment",
     del_apartment: SERVER_HOST + "/apartment/",
     add_apartment: SERVER_HOST + "/apartment",
+    upload_user_file: SERVER_HOST + "/user/file",
 };
