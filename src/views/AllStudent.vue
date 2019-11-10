@@ -94,6 +94,7 @@
                 loading: false,
                 isModalVisible: false,
                 showDetailObj: {},
+                nowApi: API.users,
                 columns,
             };
         },
@@ -110,8 +111,13 @@
                 this.isModalVisible = true;
             },
             onSearch(value) {
-                // TODO 模糊搜索
-                console.log(value);
+                if (value === undefined || value === "") {
+                    this.nowApi = API.users;
+                    this.getData();
+                    return;
+                }
+                this.nowApi = API.search.users + value;
+                this.getData();
             },
             handleTableChange(pagination, filters, sorter) {
                 const pager = {...this.pagination};
@@ -127,7 +133,7 @@
             },
             getData(params = {page: 1, results: 10}) {
                 this.loading = true;
-                Get(API.users + '/?page=' + (params.page - 1) + '&size=' + params.results)
+                Get(this.nowApi + '/?page=' + (params.page - 1) + '&size=' + params.results)
                     .do(response => {
                         const pagination = {...this.pagination};
                         pagination.total = response.data.data.totalElements;
