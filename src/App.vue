@@ -6,21 +6,29 @@
           <img class="logo" :src="`${publicPath}logo.png`" alt="logo img"/>
         </div>
         <a-menu theme="dark" mode="inline" v-model="selectedMenuKeys">
-          <a-menu-item key="all_student" @click="pushRouter('/student')">
+          <a-menu-item key="student" @click="pushRouter('/student')">
             <a-icon type="profile"/>
             <span>学生查询</span>
           </a-menu-item>
-          <a-menu-item key="review" @click="pushRouter('/new_student')">
+          <a-menu-item key="new_student" @click="pushRouter('/new_student')">
             <a-icon type="plus"/>
             <span>新增学生</span>
           </a-menu-item>
-          <a-menu-item key="plan_list" @click="pushRouter('/apartment')">
+          <a-menu-item key="apartment" @click="pushRouter('/apartment')">
             <a-icon type="align-left"/>
             <span>公寓管理</span>
           </a-menu-item>
-          <a-menu-item key="export" @click="pushRouter('/export')">
-            <a-icon type="download"/>
+          <a-menu-item key="leave" @click="pushRouter('/leave')">
+            <a-icon type="search"/>
             <span>请假查询</span>
+          </a-menu-item>
+          <a-menu-item key="leave_check" @click="pushRouter('/leave_check')">
+            <a-icon type="tags"/>
+            <span>请假审批</span>
+          </a-menu-item>
+          <a-menu-item key="room" @click="pushRouter('/room')">
+            <a-icon type="home"/>
+            <span>归寝管理</span>
           </a-menu-item>
         </a-menu>
       </a-layout-sider>
@@ -63,7 +71,7 @@
             //登录用户
             loginUser: '',
             //当前选中菜单
-            selectedMenuKeys: ['all_student'],
+            selectedMenuKeys: ['student'],
         }),
         methods: {
             /**
@@ -71,6 +79,9 @@
              * @param path 路由路径
              */
             pushRouter(path) {
+                if (this.$route.path === path) {
+                    return;
+                }
                 this.$router.push(path);
             },
             /**
@@ -82,7 +93,9 @@
             }
         },
         created() {
-
+            this.$store.watch((state, getters) => state.now_path, (value, oldValue) => {
+                this.selectedMenuKeys = [value.replace(/[^a-zA-Z_]/g, '')];
+            });
         }
     }
 </script>

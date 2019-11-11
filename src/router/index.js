@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Vuex from '../store'
 
 Vue.use(VueRouter);
 
@@ -32,6 +33,10 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
+});
+
+router.afterEach((to, from) => {
+    Vuex.state.now_path = to.path;
 });
 
 export default router

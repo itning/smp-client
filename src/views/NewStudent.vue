@@ -22,21 +22,25 @@
         </p>
       </a-upload-dragger>
     </div>
-    <div v-if="currentIndex===1" style="margin-top: 50px;padding-left: 150px">
+    <div v-if="currentIndex===2" style="margin-top: 50px;padding-left: 150px">
       <a-row style="margin-bottom: 20px">
         <a-col :span="8"></a-col>
         <a-col :span="8">
-          <a-statistic title="新增学生数量" :value="20" style=""/>
+          <a-statistic title="新增学生数量" :value="resultStudentInfo.now" style=""/>
         </a-col>
         <a-col :span="8"></a-col>
       </a-row>
       <a-row>
         <a-col :span="8"></a-col>
         <a-col :span="8">
-          <a-statistic title="总共学生数量" :value="1250" style=""/>
+          <a-statistic title="总共学生数量" :value="resultStudentInfo.total" style=""/>
         </a-col>
         <a-col :span="8"></a-col>
       </a-row>
+    </div>
+    <div v-if="currentIndex===1" style="margin-top: 50px;padding-left: 150px">
+      <a-button size="large" type="danger" @click="handleReturn">返回重新上传</a-button>
+      <p style="color: red" v-for="msg in resultStudentInfo.error">{{msg}}</p>
     </div>
   </div>
 </template>
@@ -49,10 +53,15 @@
         name: "NewStudent",
         data() {
             return {
-                currentIndex: 0
+                currentIndex: 0,
+                resultStudentInfo: {}
             }
         },
         methods: {
+            handleReturn() {
+                this.currentIndex = 0;
+                this.resultStudentInfo = {};
+            },
             beforeUpload(file, fileList) {
                 let exName = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2);
                 if (exName === 'xls' || exName === 'xlsx') {
@@ -79,8 +88,16 @@
                         }
                     })
                     .do(response => {
-                        this.$message.success('上传成功');
-                        this.currentIndex = 1;
+                        if (response.data.data.error === null) {
+                            this.$message.success('上传成功');
+                            this.resultStudentInfo.now = response.data.data.now;
+                            this.resultStudentInfo.total = response.data.data.total;
+                            this.currentIndex = 2;
+                        } else {
+                            this.$message.error('文件有错误，请检查');
+                            this.resultStudentInfo.error = response.data.data.error;
+                            this.currentIndex = 1;
+                        }
                     })
             }
         }
