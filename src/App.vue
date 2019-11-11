@@ -3,7 +3,8 @@
     <a-layout style="height: 100%">
       <a-layout-sider :trigger="null" collapsible v-model="collapsed">
         <div class="logo-box">
-          <img class="logo" :src="`${publicPath}logo.png`" alt="logo img"/>
+          <img v-show="!collapsed" class="logo" :src="`${publicPath}logo.png`" alt="logo img"/>
+          <img v-show="collapsed" class="logo-small" :src="`${publicPath}logo-small.png`" alt="logo img"/>
         </div>
         <a-menu theme="dark" mode="inline" v-model="selectedMenuKeys">
           <a-menu-item key="student" @click="pushRouter('/student')">
@@ -114,8 +115,14 @@
     overflow: hidden;
   }
 
-  .logo-box img {
+  .logo {
     width: 180px;
+  }
+
+  .logo-small {
+    position: relative;
+    width: 36px;
+    left: 12px;
   }
 
   /*用户操作按钮*/
