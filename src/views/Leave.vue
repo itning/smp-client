@@ -2,21 +2,6 @@
   <div>
     <div class="search_box">
       <a-input-search placeholder="键入学号或姓名进行模糊搜索" @search="onSearch" enterButton/>
-      <div style="margin-top: 6px">
-        <a-switch @change="additionalQuery=!additionalQuery" disabled
-                  style="margin-right: 12px;position: relative;bottom: 2px;"/>
-        <a-select :disabled="!additionalQuery" defaultValue="2" style="margin-right: 12px">
-          <a-select-option value="2">课假+寝室假</a-select-option>
-          <a-select-option value="0">课假</a-select-option>
-          <a-select-option value="1">寝室假</a-select-option>
-        </a-select>
-        <a-select :disabled="!additionalQuery" defaultValue="2" style="margin-right: 12px">
-          <a-select-option value="2">全部范围</a-select-option>
-          <a-select-option value="0">假期中</a-select-option>
-          <a-select-option value="1">已过期</a-select-option>
-        </a-select>
-        <a-range-picker :disabled="!additionalQuery" @change="onChange"/>
-      </div>
     </div>
     <a-table
       :columns="columns"
@@ -94,14 +79,12 @@
                     pageSizeOptions: ['10', '30', '50', '70', '100']
                 },
                 additionalQuery: false,
+                additionalQueryObj: {leaveType: "-1", end: "-1"},
                 nowApi: API.leaves,
                 columns,
             }
         },
         methods: {
-            onChange() {
-
-            },
             handleTableChange(pagination, filters, sorter) {
                 const pager = {...this.pagination};
                 pager.current = pagination.current;
