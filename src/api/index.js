@@ -5,7 +5,8 @@ export const API = {
     users: SERVER_HOST + "/info/users",
     apartment: SERVER_HOST + "/info/apartments",
     search: {
-        users: SERVER_HOST + "/info/search/users/"
+        users: SERVER_HOST + "/info/search/users/",
+        leaves: SERVER_HOST + "/leave/search/leaves/"
     },
     update_user: SERVER_HOST + "/info/user",
     del_user: SERVER_HOST + "/info/user/",
