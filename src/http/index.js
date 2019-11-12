@@ -54,7 +54,9 @@ instance.interceptors.response.use(
             switch (error.response.status) {
                 case 401:
                     window.localStorage.setItem('last_path', window.location.pathname);
-                    //TODO 跳转到登录页面
+                    setTimeout(() => {
+                        window.location.href = "/security";
+                    }, 2000);
                     onceToast(error.response.data.msg);
                     return;
                 case 403:

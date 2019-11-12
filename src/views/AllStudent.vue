@@ -151,7 +151,7 @@
             },
             getData(params = {page: 1, results: 10}) {
                 this.loading = true;
-                Get(this.nowApi + '/?page=' + (params.page - 1) + '&size=' + params.results)
+                Get(this.nowApi + '?page=' + (params.page - 1) + '&size=' + params.results)
                     .do(response => {
                         const pagination = {...this.pagination};
                         pagination.total = response.data.data.totalElements;
