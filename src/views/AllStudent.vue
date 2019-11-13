@@ -46,23 +46,28 @@
     const columns = [
         {
             title: '姓名',
-            dataIndex: 'name'
+            dataIndex: 'name',
+            sorter: true
         },
         {
             title: '学号',
-            dataIndex: 'studentId'
+            dataIndex: 'studentId',
+            sorter: true
         },
         {
             title: '性别',
-            dataIndex: 'sex'
+            dataIndex: 'sex',
+            sorter: true
         },
         {
             title: '年龄',
-            dataIndex: 'age'
+            dataIndex: 'age',
+            sorter: true
         },
         {
             title: '出生日期',
-            dataIndex: 'birthday'
+            dataIndex: 'birthday',
+            sorter: true
         },
         {
             title: '公寓',
@@ -74,11 +79,13 @@
         },
         {
             title: '电话',
-            dataIndex: 'tel'
+            dataIndex: 'tel',
+            sorter: true
         },
         {
             title: '邮箱',
-            dataIndex: 'email'
+            dataIndex: 'email',
+            sorter: true
         },
         {
             title: '操作',
@@ -153,7 +160,14 @@
             getData(params = {page: 1, results: 10}) {
                 this.loading = true;
                 this.pageInfo = params;
-                Get(this.nowApi + '?page=' + (params.page - 1) + '&size=' + params.results)
+                let api;
+                if (params.sortField !== undefined && params.sortOrder !== undefined) {
+                    api = this.nowApi + '?page=' + (params.page - 1) + '&size=' + params.results + "&sort=" + params.sortField
+                        + "," + (params.sortOrder === "ascend" ? 'asc' : 'desc')
+                } else {
+                    api = this.nowApi + '?page=' + (params.page - 1) + '&size=' + params.results;
+                }
+                Get(api)
                     .do(response => {
                         const pagination = {...this.pagination};
                         pagination.total = response.data.data.totalElements;
