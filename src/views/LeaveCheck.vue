@@ -5,12 +5,24 @@
     </div>
     <a-table
       :columns="columns"
-      :rowKey="user => user.id"
+      :rowKey="leave => leave.id"
       :dataSource="data"
       :pagination="pagination"
       :loading="loading"
       @change="handleTableChange"
     >
+      <template slot="operation" slot-scope="text, record">
+        <a-popconfirm
+          v-if="!record.status"
+          title="确定通过？"
+          @confirm="() => statusChangeTrue(record.id)"
+        >
+          <a href="javascript:;">通过</a>
+        </a-popconfirm>
+      </template>
+      <div slot="expandedRowRender" slot-scope="record">
+        <comment v-model="record.leaveReasonList" :leave-id="record.id"/>
+      </div>
     </a-table>
   </div>
 </template>
@@ -18,8 +30,9 @@
 <script>
     import moment from 'moment';
     import 'moment/locale/zh-cn';
-    import {Get} from "../http";
+    import {Get, Post} from "../http";
     import {API} from "../api";
+    import Comment from "../components/Comment";
 
     moment.locale('zh-cn');
 
@@ -60,10 +73,16 @@
             title: '原因',
             dataIndex: 'reason',
             width: "25%"
+        },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            scopedSlots: {customRender: 'operation'},
         }
     ];
     export default {
         name: "LeaveCheck",
+        components: {Comment},
         data() {
             return {
                 loading: true,
@@ -78,13 +97,21 @@
                     //分页下拉框数据
                     pageSizeOptions: ['10', '30', '50', '70', '100']
                 },
-                additionalQuery: false,
-                additionalQueryObj: {leaveType: "-1", end: "-1"},
-                nowApi: API.leaves,
-                columns,
+                nowApi: API.leaves_check,
+                nowApiQuery: undefined,
+                columns
             }
         },
         methods: {
+            statusChangeTrue(id) {
+                Post(API.leave_status_true)
+                    .withSuccessCode(204)
+                    .withURLSearchParams({leaveId: id})
+                    .do(response => {
+                        this.$message.success('审批通过成功');
+                        this.getData();
+                    })
+            },
             handleTableChange(pagination, filters, sorter) {
                 const pager = {...this.pagination};
                 pager.current = pagination.current;
@@ -99,7 +126,13 @@
             },
             getData(params = {page: 1, results: 10}) {
                 this.loading = true;
-                Get(this.nowApi + '?page=' + (params.page - 1) + '&size=' + params.results)
+                let api;
+                if (this.nowApiQuery !== undefined) {
+                    api = this.nowApi + this.nowApiQuery + '&page=' + (params.page - 1) + '&size=' + params.results;
+                } else {
+                    api = this.nowApi + '?page=' + (params.page - 1) + '&size=' + params.results;
+                }
+                Get(api)
                     .do(response => {
                         const pagination = {...this.pagination};
                         pagination.total = response.data.data.totalElements;
@@ -117,6 +150,7 @@
                             }
                             u.startTime = moment(u.startTime).format("YYYY年MM月DD日");
                             u.endTime = moment(u.endTime).format("YYYY年MM月DD日");
+                            u['showAddComment'] = false;
                             return u;
                         });
                         this.pagination = pagination;
@@ -127,12 +161,14 @@
             },
             onSearch(value) {
                 if (value === undefined || value === "") {
-                    this.nowApi = API.leaves;
+                    this.nowApi = API.leaves_check;
+                    this.nowApiQuery = undefined;
                     this.getData();
                     return;
                 }
                 console.log("搜索：" + value);
-                this.nowApi = API.search.leaves + value;
+                this.nowApi = API.search.leaves_check;
+                this.nowApiQuery = "?key=" + value;
                 this.getData();
             }
         },
