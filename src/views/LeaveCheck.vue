@@ -2,22 +2,6 @@
   <div>
     <div class="search_box">
       <a-input-search placeholder="键入学号或姓名进行模糊搜索" @search="onSearch" enterButton/>
-      <div style="margin-top: 6px">
-        <a-switch @change="additionalQuery=!additionalQuery"
-                  style="margin-right: 12px;position: relative;bottom: 2px;"/>
-        <a-select :disabled="!additionalQuery" v-model="additionalQueryObj.leaveType" style="margin-right: 12px">
-          <a-select-option value="">所有类型</a-select-option>
-          <a-select-option value="ALL_LEAVE">课假+寝室假</a-select-option>
-          <a-select-option value="CLASS_LEAVE">课假</a-select-option>
-          <a-select-option value="ROOM_LEAVE">寝室假</a-select-option>
-        </a-select>
-        <a-select :disabled="!additionalQuery" v-model="additionalQueryObj.effective" style="margin-right: 12px">
-          <a-select-option value="">全部范围</a-select-option>
-          <a-select-option value="1">假期中</a-select-option>
-          <a-select-option value="0">已过期</a-select-option>
-        </a-select>
-        <a-range-picker :disabled="!additionalQuery" @change="onChange" :placeholder="['假条开始日期起始','假条开始日期结束']"/>
-      </div>
     </div>
     <a-table
       :columns="columns"
@@ -79,7 +63,7 @@
         }
     ];
     export default {
-        name: "Leave",
+        name: "LeaveCheck",
         data() {
             return {
                 loading: true,
@@ -95,17 +79,12 @@
                     pageSizeOptions: ['10', '30', '50', '70', '100']
                 },
                 additionalQuery: false,
-                additionalQueryObj: {leaveType: "", effective: "", startTime: '', endTime: ''},
+                additionalQueryObj: {leaveType: "-1", end: "-1"},
                 nowApi: API.leaves,
-                nowApiQuery: undefined,
                 columns,
             }
         },
         methods: {
-            onChange(date, dateString) {
-                this.additionalQueryObj.startTime = dateString[0];
-                this.additionalQueryObj.endTime = dateString[1];
-            },
             handleTableChange(pagination, filters, sorter) {
                 const pager = {...this.pagination};
                 pager.current = pagination.current;
@@ -120,13 +99,7 @@
             },
             getData(params = {page: 1, results: 10}) {
                 this.loading = true;
-                let api;
-                if (this.nowApiQuery !== undefined) {
-                    api = this.nowApi + this.nowApiQuery + '&page=' + (params.page - 1) + '&size=' + params.results;
-                } else {
-                    api = this.nowApi + '?page=' + (params.page - 1) + '&size=' + params.results;
-                }
-                Get(api)
+                Get(this.nowApi + '?page=' + (params.page - 1) + '&size=' + params.results)
                     .do(response => {
                         const pagination = {...this.pagination};
                         pagination.total = response.data.data.totalElements;
@@ -153,29 +126,13 @@
                     })
             },
             onSearch(value) {
-                if (!this.additionalQuery && (value === undefined || value === "")) {
+                if (value === undefined || value === "") {
                     this.nowApi = API.leaves;
-                    this.nowApiQuery = undefined;
                     this.getData();
                     return;
                 }
-                this.nowApi = API.search.leaves;
-                if (this.additionalQuery) {
-                    this.nowApiQuery = "?key=" + (value === undefined ? "" : value);
-                    if (this.additionalQueryObj.startTime !== "" && this.additionalQueryObj.endTime !== "") {
-                        this.nowApiQuery += "&startTime=" + this.additionalQueryObj.startTime + "&endTime=" + this.additionalQueryObj.endTime;
-                    }
-                    if (this.additionalQueryObj.leaveType !== "") {
-                        this.nowApiQuery += "&leaveType=" + this.additionalQueryObj.leaveType;
-                    }
-                    if (this.additionalQueryObj.effective !== "") {
-                        this.nowApiQuery += "&effective=" + this.additionalQueryObj.effective;
-                    }
-                    console.log("搜索：" + this.nowApiQuery);
-                } else {
-                    console.log("搜索：" + value);
-                    this.nowApiQuery = "?key=" + value;
-                }
+                console.log("搜索：" + value);
+                this.nowApi = API.search.leaves + value;
                 this.getData();
             }
         },

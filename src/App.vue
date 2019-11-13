@@ -90,7 +90,7 @@
              */
             logout() {
                 window.localStorage.removeItem('authorization_token');
-                window.location.href = CAS_LOGOUT_URL;
+                this.$router.push("/security");
             }
         },
         created() {
