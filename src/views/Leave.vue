@@ -27,6 +27,9 @@
       :loading="loading"
       @change="handleTableChange"
     >
+      <div slot="expandedRowRender" slot-scope="record">
+        <comment v-model="record.leaveReasonList" :leave-id="record.id" :can-reply="false"/>
+      </div>
     </a-table>
   </div>
 </template>
@@ -36,6 +39,7 @@
     import 'moment/locale/zh-cn';
     import {Get} from "../http";
     import {API} from "../api";
+    import Comment from "../components/Comment";
 
     moment.locale('zh-cn');
 
@@ -80,6 +84,7 @@
     ];
     export default {
         name: "Leave",
+        components: {Comment},
         data() {
             return {
                 loading: true,

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-comment v-if="showAddComment">
+    <a-comment v-if="canReply===undefined&&showAddComment">
       <div slot="content">
         <a-form-item>
           <a-textarea :rows="5" v-model="newCommentData"></a-textarea>
@@ -20,7 +20,7 @@
       <a-list-item slot="renderItem" slot-scope="item, index">
         <a-comment :author="item.fromUser.name">
           <template slot="actions">
-            <span @click="handleReply">回复</span>
+            <span v-if="canReply===undefined" @click="handleReply">回复</span>
           </template>
           <p slot="content">{{item.comment}}</p>
           <a-tooltip slot="datetime" :title="moment(item.gmtCreate).format('YYYY-MM-DD HH:mm:ss')">
@@ -40,7 +40,7 @@
 
     moment.locale('zh-cn');
     export default {
-        props: ["value", "leaveId"],
+        props: ["value", "leaveId", "canReply"],
         name: "Comment",
         data() {
             return {

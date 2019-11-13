@@ -103,6 +103,7 @@
                     //分页下拉框数据
                     pageSizeOptions: ['10', '30', '50', '70', '100']
                 },
+                pageInfo: {},
                 loading: false,
                 isModalVisible: false,
                 showDetailObj: {},
@@ -121,7 +122,7 @@
             },
             handleModalCancel() {
                 this.showDetailObj = {};
-                this.getData();
+                this.getData(this.pageInfo);
             },
             detail(obj) {
                 this.showDetailObj = obj;
@@ -151,6 +152,7 @@
             },
             getData(params = {page: 1, results: 10}) {
                 this.loading = true;
+                this.pageInfo = params;
                 Get(this.nowApi + '?page=' + (params.page - 1) + '&size=' + params.results)
                     .do(response => {
                         const pagination = {...this.pagination};
