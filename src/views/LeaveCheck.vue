@@ -15,9 +15,17 @@
         <a-popconfirm
           v-if="!record.status"
           title="确定通过？"
-          @confirm="() => statusChangeTrue(record.id)"
+          @confirm="() => statusChange(record.id,true)"
         >
           <a href="javascript:;">通过</a>
+        </a-popconfirm>
+        <a-popconfirm
+          style="margin-left: 12px"
+          v-if="!record.status"
+          title="确定拒绝？"
+          @confirm="() => statusChange(record.id,false)"
+        >
+          <a href="javascript:;">拒绝</a>
         </a-popconfirm>
       </template>
       <div slot="expandedRowRender" slot-scope="record">
@@ -78,6 +86,7 @@
             title: '操作',
             dataIndex: 'operation',
             scopedSlots: {customRender: 'operation'},
+            width: "10%"
         }
     ];
     export default {
@@ -103,12 +112,12 @@
             }
         },
         methods: {
-            statusChangeTrue(id) {
-                Post(API.leave_status_true)
+            statusChange(id, status) {
+                Post(API.leave_status)
                     .withSuccessCode(204)
-                    .withURLSearchParams({leaveId: id})
+                    .withURLSearchParams({leaveId: id, status: status})
                     .do(response => {
-                        this.$message.success('审批通过成功');
+                        this.$message.success('审批成功');
                         this.getData();
                     })
             },
