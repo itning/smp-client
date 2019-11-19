@@ -31,6 +31,10 @@
             <a-icon type="home"/>
             <span>归寝管理</span>
           </a-menu-item>
+          <a-menu-item key="personal" @click="pushRouter('/personal')">
+            <a-icon type="user"/>
+            <span>个人中心</span>
+          </a-menu-item>
         </a-menu>
       </a-layout-sider>
       <a-layout>

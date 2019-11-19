@@ -41,6 +41,16 @@ const routes = [
         path: "/leave_check",
         name: "LeaveCheck",
         component: () => import(/* webpackChunkName: "leave_check" */ '../views/LeaveCheck.vue')
+    },
+    {
+        path: "/room",
+        name: "Room",
+        component: () => import(/* webpackChunkName: "room" */ '../views/Room.vue')
+    },
+    {
+        path: "/personal",
+        name: "Personal",
+        component: () => import(/* webpackChunkName: "personal" */ '../views/Personal.vue')
     }
 ];
 
