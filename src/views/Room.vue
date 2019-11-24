@@ -9,11 +9,19 @@
           <a-statistic-countdown title="距离打卡时间还有" :value="moment(checkTime, 'HH:mm')"/>
         </a-col>
         <a-col :span="8" style="text-align: center;">
-          <a-statistic title="打卡人数" :value="studentRoomCheckData.length">
-            <template v-slot:suffix>
-              <span> / {{totalStudentNum}}</span>
+          <a-popover title="数值统计">
+            <template slot="content">
+              <p>学生总数：{{countStudent}}</p>
+              <p>请假人数：{{countInEffectLeaves}}</p>
             </template>
-          </a-statistic>
+            <div>
+              <a-statistic title="打卡人数" :value="studentRoomCheckData.length">
+                <template v-slot:suffix>
+                  <span> / {{totalStudentNum}}</span>
+                </template>
+              </a-statistic>
+            </div>
+          </a-popover>
         </a-col>
       </a-row>
     </div>
@@ -60,7 +68,9 @@
                 nowMarkers: [],
                 checkTime: "20:30",
                 changeCheckTime: this.checkTime,
-                totalStudentNum: 0
+                totalStudentNum: 0,
+                countStudent: 0,
+                countInEffectLeaves: 0
             }
         },
         methods: {
@@ -136,12 +146,11 @@
                     });
             },
             initMap(AMap, that) {
-                let map = that.AMapInstance = new AMap.Map("js-container", {
+                that.AMapInstance = new AMap.Map("js-container", {
                     center: [127.21220960201039, 45.74218945848489],
                     zoom: 15
                 });
-
-                this.initPolygon();
+                that.initPolygon();
                 // 缩放地图到合适的视野级别
                 // map.setFitView([polygon]);
             },
@@ -174,7 +183,9 @@
             initCountShouldRoomCheck() {
                 Get(API.countShouldRoomCheck)
                     .do(response => {
-                        this.totalStudentNum = response.data.data;
+                        this.countStudent = response.data.data.t1;
+                        this.countInEffectLeaves = response.data.data.t2;
+                        this.totalStudentNum = this.countStudent - this.countInEffectLeaves;
                     })
             },
             initMarker() {
