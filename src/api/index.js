@@ -1,5 +1,6 @@
-const SERVER_HOST = "http://itning:8888";
+export const SERVER_HOST = "http://itning:8888";
 export const API = {
+    key: "b03584f2c1c4628823c666f7033a5a93",
     users: SERVER_HOST + "/info/users",
     apartment: SERVER_HOST + "/info/apartments",
     search: {
@@ -18,4 +19,5 @@ export const API = {
     leaves_check: SERVER_HOST + "/leave/leaves/check",
     leave_add_comment: SERVER_HOST + "/leave/leave/comment",
     leave_status: SERVER_HOST + "/leave/leave/status",
+    check_all: SERVER_HOST + "/room/check_all"
 };

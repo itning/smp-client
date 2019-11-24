@@ -1,12 +1,22 @@
 <template>
   <div>
-    a
+    <vue-amap/>
   </div>
 </template>
 
 <script>
+    import VueAmap from "../components/VueAmap";
+
     export default {
-        name: "Room"
+        name: "Room",
+        components: {VueAmap},
+        data() {
+            return {}
+        },
+        methods: {},
+        created() {
+
+        }
     }
 </script>
 
