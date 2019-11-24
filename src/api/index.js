@@ -19,5 +19,8 @@ export const API = {
     leaves_check: SERVER_HOST + "/leave/leaves/check",
     leave_add_comment: SERVER_HOST + "/leave/leave/comment",
     leave_status: SERVER_HOST + "/leave/leave/status",
-    check_all: SERVER_HOST + "/room/check_all"
+    check_all: SERVER_HOST + "/room/check_all",
+    check_date: SERVER_HOST + "/room/check_date",
+    gps_range: SERVER_HOST + "/room/gps_range",
+    countShouldRoomCheck: SERVER_HOST + "/room/countShouldRoomCheck",
 };
