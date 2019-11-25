@@ -42,6 +42,20 @@
       </a-modal>
     </div>
     <div id="js-container"></div>
+    <Waterfall
+      :list="studentRoomCheckData"
+      :gutter="10"
+      :width="240"
+      :phoneCol="2"
+      @handleClick="handleClick"
+      ref="waterfall"
+    >
+      <template slot="item" slot-scope="props">
+        <div class="card">
+          <img :src="waterfallSrc(props.data.id)" style="width: 100%" alt="" @load="$refs.waterfall.refresh()">
+        </div>
+      </template>
+    </Waterfall>
   </div>
 </template>
 
@@ -52,10 +66,12 @@
     import moment from 'moment';
     import 'moment/locale/zh-cn';
     import layxLoader from "../http/layxLoader";
+    import Waterfall from "vue-waterfall-plugin";
 
     moment.locale('zh-cn');
     export default {
         name: "Room",
+        components: {Waterfall},
         data() {
             return {
                 roomCheckModalVisible: false,
@@ -73,8 +89,27 @@
                 countInEffectLeaves: 0
             }
         },
+        computed: {
+            waterfallSrc() {
+                return function (id) {
+                    return `${SERVER_HOST}/room/check_image/${id}.jpg`
+                }
+            }
+        },
         methods: {
             moment,
+            handleClick(obj) {
+                this.$notification['info']({
+                    message: '学生信息',
+                    description: function (h) {
+                        const name = h("div", `姓名：${obj.user.name}`);
+                        const studentId = h("div", `学号：${obj.user.studentUser.studentId}`);
+                        const apartment = h("div", `公寓：${obj.user.studentUser.apartment.name}`);
+                        const checkTime = h("div", `打卡时间：${obj.checkTime}`);
+                        return h("div", [name, studentId, apartment, checkTime])
+                    },
+                });
+            },
             disabledDate(current) {
                 return current && current > moment().endOf('day');
             },
