@@ -46,7 +46,7 @@
       :list="studentRoomCheckData"
       :gutter="10"
       :width="240"
-      :phoneCol="2"
+      :phoneCol="4"
       @handleClick="handleClick"
       ref="waterfall"
     >
@@ -127,6 +127,7 @@
 
             handleNowDataChange(date, dateString) {
                 this.initData(dateString);
+                this.initCountShouldRoomCheck(dateString);
             },
             initPolygon() {
                 Get(API.gps_range)
@@ -215,8 +216,8 @@
                         this.changeCheckTime = date;
                     })
             },
-            initCountShouldRoomCheck() {
-                Get(API.countShouldRoomCheck)
+            initCountShouldRoomCheck(date = moment(new Date).format("YYYY-MM-DD")) {
+                Get(API.countShouldRoomCheck + "?date=" + date)
                     .do(response => {
                         this.countStudent = response.data.data.t1;
                         this.countInEffectLeaves = response.data.data.t2;
