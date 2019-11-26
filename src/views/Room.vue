@@ -27,6 +27,7 @@
     </div>
     <div style="text-align: center">
       <a-button class="edit_btn" @click="handleViewPic" style="margin-bottom: 5px">查看打卡同学</a-button>
+      <a-button class="edit_btn" @click="handleExport" style="margin-bottom: 5px">导出</a-button>
       <a-button class="edit_btn" @click="polyEditor.open()" style="margin-bottom: 5px">开始编辑</a-button>
       <a-button class="edit_btn" @click="polyEditor.close()">结束编辑</a-button>
       <a-button class="edit_btn" @click="setFitView(false)">缩放以适合标记</a-button>
@@ -47,246 +48,253 @@
 </template>
 
 <script>
-    import MapLoader from '../http/mapLoader'
-    import {Get, Post} from "../http";
-    import {API, SERVER_HOST} from "../api";
-    import moment from 'moment';
-    import 'moment/locale/zh-cn';
-    import layxLoader from "../http/layxLoader";
-    import {SET_STUDENT_ROOM_CHECK_DATA} from "../store";
+  import MapLoader from '../http/mapLoader'
+  import {Download, Get, Post} from "../http";
+  import {API, SERVER_HOST} from "../api";
+  import moment from 'moment';
+  import 'moment/locale/zh-cn';
+  import layxLoader from "../http/layxLoader";
+  import {SET_STUDENT_ROOM_CHECK_DATA} from "../store";
 
-    moment.locale('zh-cn');
-    export default {
-        name: "Room",
-        data() {
-            return {
-                roomCheckModalVisible: false,
-                layx: null,
-                AMap: null,
-                AMapInstance: null,
-                polyEditor: null,
-                polygon: null,
-                studentRoomCheckData: [],
-                nowMarkers: [],
-                checkTime: "20:30",
-                changeCheckTime: this.checkTime,
-                totalStudentNum: 0,
-                countStudent: 0,
-                countInEffectLeaves: 0
-            }
-        },
-        computed: {
-            waterfallSrc() {
-                return function (id) {
-                    return `${SERVER_HOST}/room/check_image/${id}.jpg`
-                }
-            }
-        },
-        methods: {
-            moment,
-            handleViewPic() {
-                this.$router.push('/roomPicWaterFall')
-            },
-            disabledDate(current) {
-                return current && current > moment().endOf('day');
-            },
-            handleCheckTimeChangeOk() {
-                this.roomCheckModalVisible = false;
-                console.log(this.changeCheckTime);
-                Post(API.check_date)
-                    .withSuccessCode(201)
-                    .withURLSearchParams({dateString: this.changeCheckTime})
-                    .do(response => {
-                        this.checkTime = response.data.data;
-                        this.changeCheckTime = response.data.data;
-                    })
-            },
-
-            handleNowDataChange(date, dateString) {
-                this.initData(dateString);
-                this.initCountShouldRoomCheck(dateString);
-            },
-            initPolygon() {
-                Get(API.gps_range)
-                    .do(response => {
-                        console.log();
-                        /*let path = [
-                            [127.210157, 45.743361],
-                            [127.213485, 45.74255],
-                            [127.21364, 45.739923],
-                            [127.209396, 45.740759]
-                        ];*/
-                        let path = response.data.data;
-
-                        let polygon = this.polygon = new AMap.Polygon({
-                            path: path,
-                            strokeColor: "#FF33FF",
-                            strokeWeight: 6,
-                            strokeOpacity: 0.2,
-                            fillOpacity: 0.4,
-                            fillColor: '#1791fc',
-                            zIndex: 50,
-                        });
-
-                        this.AMapInstance.add(polygon);
-                        this.AMapInstance.setFitView();
-
-                        let polyEditor = new AMap.PolyEditor(this.AMapInstance, polygon);
-                        this.polyEditor = polyEditor;
-
-                        polyEditor.on('addnode', function (event) {
-                            console.log('触发事件：addnode')
-                        });
-
-                        polyEditor.on('adjust', function (event) {
-                            console.log('触发事件：adjust')
-                        });
-
-                        polyEditor.on('removenode', function (event) {
-                            console.log('触发事件：removenode')
-                        });
-
-                        polyEditor.on('end', (event) => {
-                            console.log('触发事件： end ' + event.target);
-                            // event.target 即为编辑后的多边形对象
-                            Post(API.gps_range)
-                                .withSuccessCode(201)
-                                .withURLSearchParams({gps: event.target})
-                                .do(response => {
-                                    this.$message.success('修改成功');
-                                })
-                        });
-                    });
-            },
-            initMap(AMap, that) {
-                that.AMapInstance = new AMap.Map("js-container", {
-                    center: [127.21220960201039, 45.74218945848489],
-                    zoom: 15
-                });
-                that.initPolygon();
-                // 缩放地图到合适的视野级别
-                // map.setFitView([polygon]);
-            },
-            setFitView(isPolygon) {
-                if (isPolygon) {
-                    this.AMapInstance.setFitView([this.polygon]);
-                } else {
-                    this.AMapInstance.setFitView();
-                }
-            },
-            initData(whereDay = moment(new Date()).format("YYYY-MM-DD")) {
-                console.log("数据初始化：" + whereDay);
-                Get(API.check_all + "?whereDay=" + whereDay)
-                    .do(response => {
-                        this.studentRoomCheckData = response.data.data.map(item => {
-                            item.checkTime = moment(item.checkTime).format("YYYY年MM月DD日 HH:mm:ss");
-                            return item;
-                        });
-                        this.$store.commit(SET_STUDENT_ROOM_CHECK_DATA, this.studentRoomCheckData);
-                        this.initMarker();
-                    });
-            },
-            initCheckDate() {
-                Get(API.check_date)
-                    .do(response => {
-                        let date = moment(response.data.data).format("HH:mm");
-                        this.checkTime = date;
-                        this.changeCheckTime = date;
-                    })
-            },
-            initCountShouldRoomCheck(date = moment(new Date).format("YYYY-MM-DD")) {
-                Get(API.countShouldRoomCheck + "?date=" + date)
-                    .do(response => {
-                        this.countStudent = response.data.data.t1;
-                        this.countInEffectLeaves = response.data.data.t2;
-                        this.totalStudentNum = this.countStudent - this.countInEffectLeaves;
-                    })
-            },
-            initMarker() {
-                const AMap = this.AMap;
-                const AMapInstance = this.AMapInstance;
-                AMapInstance.remove(this.nowMarkers);
-                this.studentRoomCheckData.forEach(item => {
-                    let marker = new AMap.Marker({
-                        map: AMapInstance,
-                        position: [item.longitude, item.latitude],
-                        topWhenClick: true,
-                        extData: item,
-                        animation: "AMAP_ANIMATION_DROP"
-                    });
-                    this.nowMarkers.push(marker);
-                    AMap.event.addListener(marker, 'click', (e) => {
-                        const data = e.target.getExtData();
-
-                        function wrapItem(content) {
-                            return `<p>${content}</p>`
-                        }
-
-                        function wrap() {
-                            let obj = {
-                                "姓名": data.user.name,
-                                "学号": data.user.studentUser.studentId,
-                                "公寓": data.user.studentUser.apartment.name,
-                                "打卡时间": data.checkTime
-                            };
-                            let s = "";
-                            for (let o in obj) {
-                                s += wrapItem(o + "：" + obj[o]);
-                            }
-                            return s;
-                        }
-
-                        let infoWindow = new AMap.InfoWindow({
-                            content: wrap(),
-                            offset: new AMap.Pixel(1, -30)
-                        });
-
-                        infoWindow.on("open", () => {
-                            const name = `${data.user.name}（${data.user.studentUser.studentId}）`;
-                            this.layx.html(data.user.studentUser.studentId, name, `<img style="width:100%" src="${SERVER_HOST}/room/check_image/${data.id}.jpg"/>`, {
-                                width: 300,
-                                height: 600,
-                                maxable: false,
-                                maxMenu: false,
-                                isOverToMax: false,
-                                type: 'html',
-                                storeStatus: false,
-                                position: [100, 100],
-                                closeMenu: false
-                            });
-                        });
-                        infoWindow.on("close", () => {
-                            this.layx.destroy(data.user.studentUser.studentId);
-                        });
-                        infoWindow.open(AMapInstance, e.target.getPosition());
-
-                    })
-                })
-            }
-        },
-        mounted() {
-            this.initCheckDate();
-            this.initCountShouldRoomCheck();
-            let that = this;
-            layxLoader().then(layx => {
-                that.layx = layx;
-                console.log('layx加载成功');
-            }, e => {
-                console.log('layx加载失败', e)
-            });
-            MapLoader().then(AMap => {
-                console.log('地图加载成功');
-                that.AMap = AMap;
-                that.initMap(AMap, that);
-                that.initData();
-            }, e => {
-                console.log('地图加载失败', e)
-            });
-        },
-        destroyed() {
-            this.layx.destroyAll();
+  moment.locale('zh-cn');
+  export default {
+    name: "Room",
+    data() {
+      return {
+        roomCheckModalVisible: false,
+        layx: null,
+        AMap: null,
+        AMapInstance: null,
+        polyEditor: null,
+        polygon: null,
+        studentRoomCheckData: [],
+        nowMarkers: [],
+        nowShowTime: "",
+        checkTime: "20:30",
+        changeCheckTime: this.checkTime,
+        totalStudentNum: 0,
+        countStudent: 0,
+        countInEffectLeaves: 0
+      }
+    },
+    computed: {
+      waterfallSrc() {
+        return function (id) {
+          return `${SERVER_HOST}/room/check_image/${id}.jpg`
         }
+      }
+    },
+    methods: {
+      moment,
+      handleExport() {
+        Download(API.export_room + this.nowShowTime, headers => {
+          return this.nowShowTime + " 学生寝室打卡信息.xlsx"
+        })
+      },
+      handleViewPic() {
+        this.$router.push('/roomPicWaterFall')
+      },
+      disabledDate(current) {
+        return current && current > moment().endOf('day');
+      },
+      handleCheckTimeChangeOk() {
+        this.roomCheckModalVisible = false;
+        console.log(this.changeCheckTime);
+        Post(API.check_date)
+          .withSuccessCode(201)
+          .withURLSearchParams({dateString: this.changeCheckTime})
+          .do(response => {
+            this.checkTime = response.data.data;
+            this.changeCheckTime = response.data.data;
+          })
+      },
+
+      handleNowDataChange(date, dateString) {
+        this.initData(dateString);
+        this.initCountShouldRoomCheck(dateString);
+      },
+      initPolygon() {
+        Get(API.gps_range)
+          .do(response => {
+            console.log();
+            /*let path = [
+                [127.210157, 45.743361],
+                [127.213485, 45.74255],
+                [127.21364, 45.739923],
+                [127.209396, 45.740759]
+            ];*/
+            let path = response.data.data;
+
+            let polygon = this.polygon = new AMap.Polygon({
+              path: path,
+              strokeColor: "#FF33FF",
+              strokeWeight: 6,
+              strokeOpacity: 0.2,
+              fillOpacity: 0.4,
+              fillColor: '#1791fc',
+              zIndex: 50,
+            });
+
+            this.AMapInstance.add(polygon);
+            this.AMapInstance.setFitView();
+
+            let polyEditor = new AMap.PolyEditor(this.AMapInstance, polygon);
+            this.polyEditor = polyEditor;
+
+            polyEditor.on('addnode', function (event) {
+              console.log('触发事件：addnode')
+            });
+
+            polyEditor.on('adjust', function (event) {
+              console.log('触发事件：adjust')
+            });
+
+            polyEditor.on('removenode', function (event) {
+              console.log('触发事件：removenode')
+            });
+
+            polyEditor.on('end', (event) => {
+              console.log('触发事件： end ' + event.target);
+              // event.target 即为编辑后的多边形对象
+              Post(API.gps_range)
+                .withSuccessCode(201)
+                .withURLSearchParams({gps: event.target})
+                .do(response => {
+                  this.$message.success('修改成功');
+                })
+            });
+          });
+      },
+      initMap(AMap, that) {
+        that.AMapInstance = new AMap.Map("js-container", {
+          center: [127.21220960201039, 45.74218945848489],
+          zoom: 15
+        });
+        that.initPolygon();
+        // 缩放地图到合适的视野级别
+        // map.setFitView([polygon]);
+      },
+      setFitView(isPolygon) {
+        if (isPolygon) {
+          this.AMapInstance.setFitView([this.polygon]);
+        } else {
+          this.AMapInstance.setFitView();
+        }
+      },
+      initData(whereDay = moment(new Date()).format("YYYY-MM-DD")) {
+        console.log("数据初始化：" + whereDay);
+        this.nowShowTime = whereDay;
+        Get(API.check_all + "?whereDay=" + whereDay)
+          .do(response => {
+            this.studentRoomCheckData = response.data.data.map(item => {
+              item.checkTime = moment(item.checkTime).format("YYYY年MM月DD日 HH:mm:ss");
+              return item;
+            });
+            this.$store.commit(SET_STUDENT_ROOM_CHECK_DATA, this.studentRoomCheckData);
+            this.initMarker();
+          });
+      },
+      initCheckDate() {
+        Get(API.check_date)
+          .do(response => {
+            let date = moment(response.data.data).format("HH:mm");
+            this.checkTime = date;
+            this.changeCheckTime = date;
+          })
+      },
+      initCountShouldRoomCheck(date = moment(new Date).format("YYYY-MM-DD")) {
+        Get(API.countShouldRoomCheck + "?date=" + date)
+          .do(response => {
+            this.countStudent = response.data.data.t1;
+            this.countInEffectLeaves = response.data.data.t2;
+            this.totalStudentNum = this.countStudent - this.countInEffectLeaves;
+          })
+      },
+      initMarker() {
+        const AMap = this.AMap;
+        const AMapInstance = this.AMapInstance;
+        AMapInstance.remove(this.nowMarkers);
+        this.studentRoomCheckData.forEach(item => {
+          let marker = new AMap.Marker({
+            map: AMapInstance,
+            position: [item.longitude, item.latitude],
+            topWhenClick: true,
+            extData: item,
+            animation: "AMAP_ANIMATION_DROP"
+          });
+          this.nowMarkers.push(marker);
+          AMap.event.addListener(marker, 'click', (e) => {
+            const data = e.target.getExtData();
+
+            function wrapItem(content) {
+              return `<p>${content}</p>`
+            }
+
+            function wrap() {
+              let obj = {
+                "姓名": data.user.name,
+                "学号": data.user.studentUser.studentId,
+                "公寓": data.user.studentUser.apartment.name,
+                "打卡时间": data.checkTime
+              };
+              let s = "";
+              for (let o in obj) {
+                s += wrapItem(o + "：" + obj[o]);
+              }
+              return s;
+            }
+
+            let infoWindow = new AMap.InfoWindow({
+              content: wrap(),
+              offset: new AMap.Pixel(1, -30)
+            });
+
+            infoWindow.on("open", () => {
+              const name = `${data.user.name}（${data.user.studentUser.studentId}）`;
+              this.layx.html(data.user.studentUser.studentId, name, `<img style="width:100%" src="${SERVER_HOST}/room/check_image/${data.id}.jpg"/>`, {
+                width: 300,
+                height: 600,
+                maxable: false,
+                maxMenu: false,
+                isOverToMax: false,
+                type: 'html',
+                storeStatus: false,
+                position: [100, 100],
+                closeMenu: false
+              });
+            });
+            infoWindow.on("close", () => {
+              this.layx.destroy(data.user.studentUser.studentId);
+            });
+            infoWindow.open(AMapInstance, e.target.getPosition());
+
+          })
+        })
+      }
+    },
+    mounted() {
+      this.initCheckDate();
+      this.initCountShouldRoomCheck();
+      let that = this;
+      layxLoader().then(layx => {
+        that.layx = layx;
+        console.log('layx加载成功');
+      }, e => {
+        console.log('layx加载失败', e)
+      });
+      MapLoader().then(AMap => {
+        console.log('地图加载成功');
+        that.AMap = AMap;
+        that.initMap(AMap, that);
+        that.initData();
+      }, e => {
+        console.log('地图加载失败', e)
+      });
+    },
+    destroyed() {
+      this.layx.destroyAll();
     }
+  }
 </script>
 
 <style scoped>

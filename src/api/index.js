@@ -23,4 +23,5 @@ export const API = {
     check_date: SERVER_HOST + "/room/check_date",
     gps_range: SERVER_HOST + "/room/gps_range",
     countShouldRoomCheck: SERVER_HOST + "/room/countShouldRoomCheck",
+    export_room: SERVER_HOST + "/room/export_room/",
 };
