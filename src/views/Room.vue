@@ -293,6 +293,11 @@
     },
     destroyed() {
       this.layx.destroyAll();
+      this.AMap = null;
+      this.AMapInstance = null;
+      this.polyEditor = null;
+      this.polygon = null;
+      console.log("All destroyed");
     }
   }
 </script>
