@@ -39,32 +39,38 @@
 </template>
 
 <script>
-    import {Post} from "../http";
-    import {API} from "../api";
+  import {Post} from "../http";
+  import {API} from "../api";
+  import {LOCAL_STORAGE_KEY} from "../user";
 
-    export default {
-        name: "Security",
-        methods: {
-            handleSubmit(e) {
-                e.preventDefault();
-                this.form.validateFields((err, values) => {
-                    if (!err) {
-                        console.log('Received values of form: ', values);
-                        Post(API.login)
-                            .withURLSearchParams({username: values.username, password: values.password})
-                            .do(response => {
-                                console.log("get token: " + response.data.data);
-                                window.localStorage.setItem('authorization_token', response.data.data);
-                                window.location.href = window.location.protocol + '//' + window.location.host;
-                            })
-                    }
-                });
-            },
-        },
-        beforeCreate() {
-            this.form = this.$form.createForm(this, {name: 'normal_login'});
-        }
+  export default {
+    name: "Security",
+    methods: {
+      handleSubmit(e) {
+        e.preventDefault();
+        this.form.validateFields((err, values) => {
+          if (!err) {
+            console.log('Received values of form: ', values);
+            Post(API.login)
+              .withURLSearchParams({username: values.username, password: values.password})
+              .do(response => {
+                console.log("get token: " + response.data.data);
+                window.localStorage.setItem(LOCAL_STORAGE_KEY, response.data.data);
+                if (!this.$user.isCounselorLogin) {
+                  this.$message.error('请使用辅导员账户进行登录！');
+                  window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+                  return;
+                }
+                window.location.href = window.location.protocol + '//' + window.location.host;
+              })
+          }
+        });
+      },
+    },
+    beforeCreate() {
+      this.form = this.$form.createForm(this, {name: 'normal_login'});
     }
+  }
 </script>
 
 <style scoped>
