@@ -30,27 +30,9 @@
         </a-input-password>
       </a-form-item>
       <a-form-item>
-        <a-checkbox
-          v-decorator="[
-          'remember',
-          {
-            valuePropName: 'checked',
-            initialValue: true,
-          },
-        ]"
-        >
-          记住我
-        </a-checkbox>
-        <a class="login-form-forgot" href="">
-          忘记密码
-        </a>
         <a-button type="primary" html-type="submit" class="login-form-button" block>
           登录
         </a-button>
-        或
-        <a href="">
-          立即注册！
-        </a>
       </a-form-item>
     </a-form>
   </div>
@@ -89,9 +71,5 @@
   .security_box {
     max-width: 400px;
     margin: 50px auto;
-  }
-
-  .login-form-forgot {
-    float: right;
   }
 </style>
