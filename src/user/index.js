@@ -4,7 +4,6 @@ let User = {};
 let loginUser = init();
 export const LOCAL_STORAGE_KEY = 'authorization_token';
 const COUNSELOR_ROLE_ID = "3";
-const COUNSELOR_ROLE_ID_STR = "辅导员";
 
 function init() {
     if (window.localStorage.getItem(LOCAL_STORAGE_KEY) === null) {
@@ -24,10 +23,12 @@ function init() {
 }
 
 User.loginUser = loginUser;
-User.loginName = loginUser.name;
-User.loginRole = loginUser.role;
-User.isCounselorLogin = loginUser.role !== undefined ? loginUser.role.id === COUNSELOR_ROLE_ID : false;
-
+User.loginName = User.loginUser.name;
+User.loginRole = User.loginUser.role;
+User.isCounselorLogin = function () {
+    User.loginUser = init();
+    return User.loginUser.role !== undefined ? User.loginUser.role.id === COUNSELOR_ROLE_ID : false;
+};
 User.install = function (Vue, options) {
     Vue.prototype.$user = User;
 };

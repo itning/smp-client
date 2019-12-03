@@ -56,7 +56,7 @@
               .do(response => {
                 console.log("get token: " + response.data.data);
                 window.localStorage.setItem(LOCAL_STORAGE_KEY, response.data.data);
-                if (!this.$user.isCounselorLogin) {
+                if (!this.$user.isCounselorLogin()) {
                   this.$message.error('请使用辅导员账户进行登录！');
                   window.localStorage.removeItem(LOCAL_STORAGE_KEY);
                   return;
