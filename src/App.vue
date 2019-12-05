@@ -7,9 +7,13 @@
           <img v-show="collapsed" class="logo-small" :src="`${publicPath}logo-small.png`" alt="logo img"/>
         </div>
         <a-menu theme="dark" mode="inline" v-model="selectedMenuKeys">
+          <a-menu-item key="first" @click="pushRouter('/first')">
+            <a-icon type="pie-chart"/>
+            <span>首页</span>
+          </a-menu-item>
           <a-menu-item key="student" @click="pushRouter('/student')">
             <a-icon type="profile"/>
-            <span>学生查询</span>
+            <span>学生管理</span>
           </a-menu-item>
           <a-menu-item key="new_student" @click="pushRouter('/new_student')">
             <a-icon type="plus"/>
@@ -64,45 +68,45 @@
   </a-locale-provider>
 </template>
 <script>
-    import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+  import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 
-    export default {
-        name: 'App',
-        data: () => ({
-            publicPath: process.env.BASE_URL,
-            locale: zhCN,
-            //关闭菜单栏
-            collapsed: false,
-            //登录用户
-            loginUser: '',
-            //当前选中菜单
-            selectedMenuKeys: ['student'],
-        }),
-        methods: {
-            /**
-             * 更改路由
-             * @param path 路由路径
-             */
-            pushRouter(path) {
-                if (this.$route.path === path) {
-                    return;
-                }
-                this.$router.push(path);
-            },
-            /**
-             * 注销登录
-             */
-            logout() {
-                window.localStorage.removeItem('authorization_token');
-                this.$router.push("/security");
-            }
-        },
-        created() {
-            this.$store.watch((state, getters) => state.now_path, (value, oldValue) => {
-                this.selectedMenuKeys = [value.replace(/[^a-zA-Z_]/g, '')];
-            });
+  export default {
+    name: 'App',
+    data: () => ({
+      publicPath: process.env.BASE_URL,
+      locale: zhCN,
+      //关闭菜单栏
+      collapsed: false,
+      //登录用户
+      loginUser: '',
+      //当前选中菜单
+      selectedMenuKeys: ['first'],
+    }),
+    methods: {
+      /**
+       * 更改路由
+       * @param path 路由路径
+       */
+      pushRouter(path) {
+        if (this.$route.path === path) {
+          return;
         }
+        this.$router.push(path);
+      },
+      /**
+       * 注销登录
+       */
+      logout() {
+        window.localStorage.removeItem('authorization_token');
+        this.$router.push("/security");
+      }
+    },
+    created() {
+      this.$store.watch((state, getters) => state.now_path, (value, oldValue) => {
+        this.selectedMenuKeys = [value.replace(/[^a-zA-Z_]/g, '')];
+      });
     }
+  }
 </script>
 <style scoped>
   /*调整菜单栏开关按钮位置和鼠标样式*/

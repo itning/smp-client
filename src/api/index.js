@@ -24,4 +24,9 @@ export const API = {
     gps_range: SERVER_HOST + "/room/gps_range",
     countShouldRoomCheck: SERVER_HOST + "/room/countShouldRoomCheck",
     export_room: SERVER_HOST + "/room/export_room/",
+    statistics_apartment: SERVER_HOST + "/statistics/apartment",
+    statistics_home_coming: SERVER_HOST + "/statistics/home_coming",
+    statistics_leave: SERVER_HOST + "/statistics/leave",
+    statistics_class_coming: SERVER_HOST + "/statistics/class_coming",
+    statistics_all_counselor: SERVER_HOST + "/statistics/all_counselor",
 };

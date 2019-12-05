@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 const routes = [
     {
         path: '/',
-        redirect: '/student'
+        redirect: '/first'
     },
     {
         path: '/apartment',
@@ -56,6 +56,15 @@ const routes = [
         path: "/roomPicWaterFall",
         name: "RoomPicWaterFall",
         component: () => import(/* webpackChunkName: "roomPicWaterFall" */ '../views/RoomPicWaterFall.vue')
+    },
+    {
+        path: "/first",
+        name: "First",
+        component: () => import(/* webpackChunkName: "first" */ '../views/First.vue')
+    },
+    {
+        path: '*',
+        redirect: '/first'
     }
 ];
 
