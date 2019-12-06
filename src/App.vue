@@ -1,7 +1,7 @@
 <template>
   <a-locale-provider :locale="locale">
     <a-layout style="height: 100%">
-      <a-layout-sider :trigger="null" collapsible v-model="collapsed">
+      <a-layout-sider :trigger="null" collapsible v-model="collapsed" v-if="show">
         <div class="logo-box">
           <img v-show="!collapsed" class="logo" :src="`${publicPath}logo.png`" alt="logo img"/>
           <img v-show="collapsed" class="logo-small" :src="`${publicPath}logo-small.png`" alt="logo img"/>
@@ -42,7 +42,7 @@
         </a-menu>
       </a-layout-sider>
       <a-layout>
-        <a-layout-header style="background: #fff; padding: 0">
+        <a-layout-header style="background: #fff; padding: 0" v-if="show">
           <a-icon
             class="trigger"
             :type="collapsed ? 'menu-unfold' : 'menu-fold'"
@@ -54,6 +54,9 @@
               <a-icon type="down"/>
             </a>
             <a-menu slot="overlay">
+              <a-menu-item>
+                <a>{{$user.loginName}}</a>
+              </a-menu-item>
               <a-menu-item>
                 <a @click="logout">注销登录</a>
               </a-menu-item>
@@ -73,6 +76,7 @@
   export default {
     name: 'App',
     data: () => ({
+      show: true,
       publicPath: process.env.BASE_URL,
       locale: zhCN,
       //关闭菜单栏
@@ -103,7 +107,12 @@
     },
     created() {
       this.$store.watch((state, getters) => state.now_path, (value, oldValue) => {
-        this.selectedMenuKeys = [value.replace(/[^a-zA-Z_]/g, '')];
+        if (value === '/security') {
+          this.show = false;
+        } else {
+          this.show = true;
+          this.selectedMenuKeys = [value.replace(/[^a-zA-Z_]/g, '')];
+        }
       });
     }
   }

@@ -56,6 +56,7 @@
     data() {
       return {
         moment,
+        interval: null,
         roomComingStatisticsData: {
           data: {
             columns: ['name', 'percent'],
@@ -254,6 +255,16 @@
       this.initLeaveChart();
       this.initClassComingChart();
       this.initCounselorAllChart();
+      this.interval = setInterval(() => {
+        this.initHomeComingChart();
+        this.initLeaveChart();
+        this.initClassComingChart();
+      }, 5000);
+    },
+    destroyed() {
+      if (this.interval !== null) {
+        clearInterval(this.interval);
+      }
     }
   }
 </script>

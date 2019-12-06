@@ -6,18 +6,18 @@ export const LOCAL_STORAGE_KEY = 'authorization_token';
 const COUNSELOR_ROLE_ID = "3";
 
 function init() {
-    if (window.localStorage.getItem(LOCAL_STORAGE_KEY) === null) {
+    if (window.localStorage.getItem('authorization_token') === null) {
         return {};
     }
     try {
         return JSON.parse(JSON.parse(
             Base64.decode(
-                window.localStorage.getItem(LOCAL_STORAGE_KEY)
+                window.localStorage.getItem('authorization_token')
                     .split('.')[1]
             )
         ).loginUser);
     } catch (e) {
-        window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+        window.localStorage.removeItem('authorization_token');
         return {};
     }
 }
