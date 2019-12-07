@@ -15,6 +15,8 @@ export const API = {
     add_apartment: SERVER_HOST + "/info/apartment",
     upload_user_file: SERVER_HOST + "/info/user/file",
     login: SERVER_HOST + "/security/login",
+    change_password: SERVER_HOST + "/security/change/password",
+    reset_password: SERVER_HOST + "/security/reset/password",
     leaves: SERVER_HOST + "/leave/leaves",
     leaves_check: SERVER_HOST + "/leave/leaves/check",
     leave_add_comment: SERVER_HOST + "/leave/leave/comment",
