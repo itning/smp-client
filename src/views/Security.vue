@@ -36,7 +36,7 @@
           </a-input-password>
         </a-form-item>
         <a-form-item>
-          <a-button type="primary" html-type="submit" class="login-form-button" block>
+          <a-button type="primary" html-type="submit" class="login-form-button" :loading="isLoginLoading" block>
             登录
           </a-button>
         </a-form-item>
@@ -53,15 +53,22 @@
 
   export default {
     name: "Security",
+    data() {
+      return {
+        isLoginLoading: false
+      }
+    },
     methods: {
       handleSubmit(e) {
         e.preventDefault();
         this.form.validateFields((err, values) => {
           if (!err) {
+            this.isLoginLoading = true;
             console.log('Received values of form: ', values);
             Post(API.login)
               .withURLSearchParams({username: values.username, password: values.password})
               .do(response => {
+                this.isLoginLoading = false;
                 console.log("get token: " + response.data.data);
                 window.localStorage.setItem(LOCAL_STORAGE_KEY, response.data.data);
                 if (!this.$user.isCounselorLogin()) {
