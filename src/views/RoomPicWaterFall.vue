@@ -65,12 +65,12 @@
             const apartment = h("div", `公寓：${obj.user.studentUser.apartment.name}`);
             const checkTime = h("div", `打卡时间：${obj.checkTime}`);
             const checkFaceSimilarity = h("div", `相似度：${Number(obj.checkFaceSimilarity * 100).toFixed(3)}%`);
-            const a=h('img', {
+            const faceImg = h('img', {
               attrs: {
                 src: `${SERVER_HOST}/room/face_image/${obj.user.id}`
               }
             });
-            return h("div", [name, studentId, apartment, checkTime, checkFaceSimilarity,a])
+            return h("div", [name, studentId, apartment, checkTime, checkFaceSimilarity, faceImg])
           },
         });
       }
