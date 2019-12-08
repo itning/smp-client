@@ -22,7 +22,9 @@
           <div class="cover"><img :src="waterfallSrc(props.data.id)" style="width: 100%" alt=""
                                   @load="$refs.waterfall.refresh()"></div>
           <div class="name">
-            <p>{{props.data.user.name}} {{props.data.user.studentUser.studentId}}</p>
+            <p>
+              {{props.data.user.name}}（{{props.data.user.studentUser.studentId}}）{{Number(props.data.checkFaceSimilarity
+              * 100).toFixed(3)}}</p>
             <p>{{props.data.user.studentUser.apartment.name}} {{props.data.checkTime}}</p>
           </div>
         </div>
@@ -32,45 +34,51 @@
 </template>
 
 <script>
-    import Waterfall from "vue-waterfall-plugin";
-    import {SERVER_HOST} from "../api";
+  import Waterfall from "vue-waterfall-plugin";
+  import {SERVER_HOST} from "../api";
 
-    export default {
-        name: "RoomPicWaterFall",
-        components: {Waterfall},
-        data() {
-            return {
-                data: []
-            }
-        },
-        computed: {
-            waterfallSrc() {
-                return function (id) {
-                    return `${SERVER_HOST}/room/check_image/${id}.jpg`
-                }
-            }
-        },
-        methods: {
-            backTopTarget() {
-                return window.document.getElementsByClassName('ant-layout')[1];
-            },
-            handleClick(obj) {
-                this.$notification['info']({
-                    message: '学生信息',
-                    description: function (h) {
-                        const name = h("div", `姓名：${obj.user.name}`);
-                        const studentId = h("div", `学号：${obj.user.studentUser.studentId}`);
-                        const apartment = h("div", `公寓：${obj.user.studentUser.apartment.name}`);
-                        const checkTime = h("div", `打卡时间：${obj.checkTime}`);
-                        return h("div", [name, studentId, apartment, checkTime])
-                    },
-                });
-            }
-        },
-        created() {
-            this.data = this.$store.getters.studentRoomCheckData;
+  export default {
+    name: "RoomPicWaterFall",
+    components: {Waterfall},
+    data() {
+      return {
+        data: []
+      }
+    },
+    computed: {
+      waterfallSrc() {
+        return function (id) {
+          return `${SERVER_HOST}/room/check_image/${id}.jpg`
         }
+      }
+    },
+    methods: {
+      backTopTarget() {
+        return window.document.getElementsByClassName('ant-layout')[1];
+      },
+      handleClick(obj) {
+        this.$notification['info']({
+          message: '学生信息',
+          description: function (h) {
+            const name = h("div", `姓名：${obj.user.name}`);
+            const studentId = h("div", `学号：${obj.user.studentUser.studentId}`);
+            const apartment = h("div", `公寓：${obj.user.studentUser.apartment.name}`);
+            const checkTime = h("div", `打卡时间：${obj.checkTime}`);
+            const checkFaceSimilarity = h("div", `相似度：${Number(obj.checkFaceSimilarity * 100).toFixed(3)}%`);
+            const a=h('img', {
+              attrs: {
+                src: `${SERVER_HOST}/room/face_image/${obj.user.id}`
+              }
+            });
+            return h("div", [name, studentId, apartment, checkTime, checkFaceSimilarity,a])
+          },
+        });
+      }
+    },
+    created() {
+      this.data = this.$store.getters.studentRoomCheckData;
     }
+  }
 </script>
 
 <style scoped>

@@ -250,8 +250,9 @@
             });
 
             infoWindow.on("open", () => {
-              const name = `${data.user.name}（${data.user.studentUser.studentId}）`;
-              this.layx.html(data.user.studentUser.studentId, name, `<img style="width:100%" src="${SERVER_HOST}/room/check_image/${data.id}.jpg"/>`, {
+              const checkFaceSimilarity = Number(data.checkFaceSimilarity * 100).toFixed(3) + "%";
+              const title = `${data.user.name}（${data.user.studentUser.studentId}）相似度：${checkFaceSimilarity}`;
+              this.layx.html(data.user.studentUser.studentId, title, `<img style="width:100%" src="${SERVER_HOST}/room/check_image/${data.id}.jpg"/>`, {
                 width: 300,
                 height: 600,
                 maxable: false,
