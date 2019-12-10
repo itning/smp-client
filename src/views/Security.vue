@@ -68,7 +68,6 @@
             Post(API.login)
               .withURLSearchParams({username: values.username, password: values.password})
               .do(response => {
-                this.isLoginLoading = false;
                 console.log("get token: " + response.data.data);
                 window.localStorage.setItem(LOCAL_STORAGE_KEY, response.data.data);
                 if (!this.$user.isCounselorLogin()) {
@@ -77,6 +76,9 @@
                   return;
                 }
                 window.location.href = window.location.protocol + '//' + window.location.host;
+              })
+              .doAfter(() => {
+                this.isLoginLoading = false;
               })
           }
         });
