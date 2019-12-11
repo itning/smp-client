@@ -1,20 +1,24 @@
 import axios from 'axios'
 import Vue from 'vue'
+
+let show = false;
 //错误吐司
 const showErrorToast = function (title, msg, duration = 4.5) {
     Vue.prototype.$notification['error']({
         message: title,
         description: msg,
-        duration: duration
+        duration: duration,
+        onClose: () => {
+            show = false;
+        }
     });
 };
 //一次显示错误吐司
-let show = false;
-const onceToast = function (msg) {
+const onceToast = function (msg, title = '注意：') {
     if (show) {
         return;
     }
-    showErrorToast('注意：', msg);
+    showErrorToast(title, msg);
     show = true;
 };
 
@@ -168,6 +172,11 @@ _request.prototype.doAfter = function (fn) {
     return this;
 };
 
+_request.prototype.withOnceErrorToast = function (isOnce = false) {
+    this.isOnce = isOnce;
+    return this;
+};
+
 _request.prototype.do = function (fn) {
     let that = this;
     let promise = null;
@@ -232,7 +241,11 @@ _request.prototype.do = function (fn) {
         })
         .catch(error => {
             if (error.response !== undefined) {
-                showErrorToast(that.startMsg, error.response.data.msg);
+                if (that.isOnce !== undefined && that.isOnce) {
+                    onceToast(error.response.data.msg, that.startMsg);
+                } else {
+                    showErrorToast(that.startMsg, error.response.data.msg);
+                }
             }
         })
         .then(() => {
