@@ -24,7 +24,7 @@
           okText="确定"
           cancelText="取消"
         >
-          <a-button type="danger">
+          <a-button type="danger" :loading="isDelLoading">
             删除该学生
           </a-button>
         </a-popconfirm>
@@ -125,6 +125,7 @@
         isModalVisible: false,
         showDetailObj: {},
         nowApi: API.users,
+        isDelLoading: false,
         columns,
       };
     },
@@ -139,11 +140,17 @@
       },
       handleDelStudent() {
         console.log("删除ID:" + this.showDetailObj.id);
-        Del(API.del_user + this.showDetailObj.id).withSuccessCode(204).do(Response => {
-          this.$message.success('成功删除');
-          this.isModalVisible = false;
-          this.handleModalCancel();
-        })
+        this.isDelLoading = true;
+        Del(API.del_user + this.showDetailObj.id)
+          .withSuccessCode(204)
+          .do(Response => {
+            this.$message.success('成功删除');
+            this.isModalVisible = false;
+            this.handleModalCancel();
+          })
+          .doAfter(() => {
+            this.isDelLoading = false;
+          })
       },
       handleModalCancel() {
         this.showDetailObj = {};
