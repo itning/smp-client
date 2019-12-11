@@ -19,7 +19,7 @@
     >
       <template slot="item" slot-scope="props">
         <div class="card">
-          <div class="cover"><img :src="waterfallSrc(props.data.id)" style="width: 100%" alt=""
+          <div class="cover"><img :src="waterfallSrc(props.data)" style="width: 100%" alt=""
                                   @load="$refs.waterfall.refresh()"></div>
           <div class="name">
             <p>
@@ -47,8 +47,8 @@
     },
     computed: {
       waterfallSrc() {
-        return function (id) {
-          return `${SERVER_HOST}/room/check_image/${id}.jpg`
+        return function (obj) {
+          return `${SERVER_HOST}/room/check_image/${obj.id}.${obj.filenameExtension}`
         }
       }
     },
