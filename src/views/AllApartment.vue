@@ -94,7 +94,7 @@
                 if (this.newApartmentName.trim() !== "") {
                     Post(API.add_apartment)
                         .withSuccessCode(201)
-                        .withURLSearchParams({name: this.newApartmentName.trim()})
+                        .withURLSearchParams({apartmentName: this.newApartmentName.trim()})
                         .do(response => {
                             this.dataSource.push(response.data.data);
                         })
