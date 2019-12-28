@@ -69,7 +69,7 @@
         </a-layout>
       </a-layout>
     </a-locale-provider>
-    <a-modal title="Basic Modal" v-model="showChangePwdModel" :confirmLoading="confirmLoading"
+    <a-modal title="修改密码" v-model="showChangePwdModel" :confirmLoading="confirmLoading"
              @ok="handleChangePwd" okText="修改" cancelText="取消">
       <a-input-password placeholder="新密码" v-model="newPwd"/>
     </a-modal>
