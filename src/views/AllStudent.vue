@@ -16,7 +16,7 @@
       </template>
     </a-table>
     <a-modal title="查看详情" :width="750" :maskClosable="false" v-model="isModalVisible"
-             @cancel="handleModalCancel">
+             :destroyOnClose="true" @cancel="handleModalCancel">
       <template slot="footer">
         <a-popconfirm
           title="确定删除该学生？"
