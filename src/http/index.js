@@ -177,6 +177,11 @@ _request.prototype.withOnceErrorToast = function (isOnce = false) {
     return this;
 };
 
+_request.prototype.watchError = function (errorWatchFunc) {
+    this.errorWatchFunc = errorWatchFunc;
+    return this;
+};
+
 _request.prototype.do = function (fn) {
     let that = this;
     let promise = null;
@@ -241,6 +246,9 @@ _request.prototype.do = function (fn) {
         })
         .catch(error => {
             if (error.response !== undefined) {
+                if (that.errorWatchFunc !== undefined) {
+                    that.errorWatchFunc(error.response)
+                }
                 if (that.isOnce !== undefined && that.isOnce) {
                     onceToast(error.response.data.msg, that.startMsg);
                 } else {

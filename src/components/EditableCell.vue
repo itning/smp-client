@@ -15,30 +15,36 @@
   </div>
 </template>
 <script>
-    export default {
-        props: {
-            text: String,
-        },
-        name: "EditableCell",
-        data() {
-            return {
-                value: this.text,
-                editable: false,
-            };
-        },
-        methods: {
-            handleChange(e) {
-                this.value = e.target.value;
-            },
-            check() {
-                this.editable = false;
-                this.$emit('change', this.value);
-            },
-            edit() {
-                this.editable = true;
-            },
-        },
-    };
+  export default {
+    props: {
+      text: String,
+    },
+    name: "EditableCell",
+    data() {
+      return {
+        oldValue: this.text,
+        value: this.text,
+        editable: false,
+      };
+    },
+    watch: {
+      text: function (n, o) {
+        this.value = n;
+      }
+    },
+    methods: {
+      handleChange(e) {
+        this.value = e.target.value;
+      },
+      check() {
+        this.editable = false;
+        this.$emit('change', {value: this.value, oldValue: this.oldValue});
+      },
+      edit() {
+        this.editable = true;
+      },
+    }
+  };
 </script>
 
 <style scoped>

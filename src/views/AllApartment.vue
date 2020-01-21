@@ -28,95 +28,100 @@
 </template>
 
 <script>
-    import EditableCell from "../components/EditableCell";
-    import {Del, Get, Patch, Post} from "../http";
-    import {API} from "../api";
+  import EditableCell from "../components/EditableCell";
+  import {Del, Get, Patch, Post} from "../http";
+  import {API} from "../api";
 
-    export default {
-        name: "AllApartment",
-        components: {EditableCell},
-        data() {
-            return {
-                newApartmentName: "",
-                visible: false,
-                loading: true,
-                dataSource: [],
-                columns: [
-                    {
-                        title: '公寓名',
-                        dataIndex: 'name',
-                        scopedSlots: {customRender: 'name'},
-                    },
-                    {
-                        title: '操作',
-                        dataIndex: 'operation',
-                        scopedSlots: {customRender: 'operation'},
-                    },
-                ],
-                pagination: {
-                    hideOnSinglePage: true,
-                    //是否可以快速跳转至某页
-                    showQuickJumper: true,
-                    //是否可以改变 pageSize
-                    showSizeChanger: true,
-                    //默认的每页条数
-                    defaultPageSize: 10,
-                    //分页下拉框数据
-                    pageSizeOptions: ['10', '30', '50', '70', '100']
-                },
-            };
+  export default {
+    name: "AllApartment",
+    components: {EditableCell},
+    data() {
+      return {
+        newApartmentName: "",
+        visible: false,
+        loading: true,
+        dataSource: [],
+        columns: [
+          {
+            title: '公寓名',
+            dataIndex: 'name',
+            scopedSlots: {customRender: 'name'},
+          },
+          {
+            title: '操作',
+            dataIndex: 'operation',
+            scopedSlots: {customRender: 'operation'},
+          },
+        ],
+        pagination: {
+          hideOnSinglePage: true,
+          //是否可以快速跳转至某页
+          showQuickJumper: true,
+          //是否可以改变 pageSize
+          showSizeChanger: true,
+          //默认的每页条数
+          defaultPageSize: 10,
+          //分页下拉框数据
+          pageSizeOptions: ['10', '30', '50', '70', '100']
         },
-        methods: {
-            onCellChange(id, dataIndex, value) {
-                const dataSource = [...this.dataSource];
-                const target = dataSource.find(item => item.id === id);
-                if (target) {
-                    target[dataIndex] = value;
-                    Patch(API.update_apartment)
-                        .withSuccessCode(204)
-                        .withJSONData({
-                            id: id,
-                            name: value
-                        })
-                        .do(response => {
-                            this.$message.success('修改成功');
-                        });
-                    this.dataSource = dataSource;
-                }
-            },
-            onDelete(id) {
-                Del(API.del_apartment + id).withSuccessCode(204).do(respons => {
-                    const dataSource = [...this.dataSource];
-                    this.dataSource = dataSource.filter(item => item.id !== id);
-                })
-            },
-            handleAdd() {
-                if (this.newApartmentName.trim() !== "") {
-                    Post(API.add_apartment)
-                        .withSuccessCode(201)
-                        .withURLSearchParams({apartmentName: this.newApartmentName.trim()})
-                        .do(response => {
-                            this.dataSource.push(response.data.data);
-                        })
-                        .doAfter(() => {
-                            this.visible = false;
-                        })
-                }
-            },
-            initApartmentData() {
-                this.loading = true;
-                Get(API.apartment)
-                    .do(response => {
-                        this.dataSource = response.data.data;
-                    }).doAfter(() => {
-                    this.loading = false;
-                })
-            }
-        },
-        mounted() {
-            this.initApartmentData();
+      };
+    },
+    methods: {
+      onCellChange(id, dataIndex, value) {
+        const dataSource = [...this.dataSource];
+        const target = dataSource.find(item => item.id === id);
+        if (target) {
+          target[dataIndex] = value.value;
+          Patch(API.update_apartment)
+            .withSuccessCode(204)
+            .withJSONData({
+              id: id,
+              name: value.value
+            })
+            .do(response => {
+              this.$message.success('修改成功');
+            })
+            .watchError(errorResponse => {
+              target[dataIndex] = value.oldValue;
+              this.dataSource = dataSource;
+            });
+          this.dataSource = dataSource;
         }
+      },
+      onDelete(id) {
+        Del(API.del_apartment + id).withSuccessCode(204).do(respons => {
+          const dataSource = [...this.dataSource];
+          this.dataSource = dataSource.filter(item => item.id !== id);
+        })
+      },
+      handleAdd() {
+        if (this.newApartmentName.trim() !== "") {
+          Post(API.add_apartment)
+            .withSuccessCode(201)
+            .withURLSearchParams({apartmentName: this.newApartmentName.trim()})
+            .do(response => {
+              this.dataSource.push(response.data.data);
+              this.newApartmentName = "";
+            })
+            .doAfter(() => {
+              this.visible = false;
+            })
+        }
+      },
+      initApartmentData() {
+        this.loading = true;
+        Get(API.apartment)
+          .do(response => {
+            this.dataSource = response.data.data;
+          }).doAfter(() => {
+          this.loading = false;
+        })
+      }
+    },
+    mounted() {
+      this.initApartmentData();
     }
+  }
 </script>
 
 <style scoped>

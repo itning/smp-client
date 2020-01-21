@@ -67,6 +67,7 @@
             console.log('Received values of form: ', values);
             Post(API.login)
               .withURLSearchParams({username: values.username, password: values.password})
+              .withOnceErrorToast(true)
               .do(response => {
                 console.log("get token: " + response.data.data);
                 window.localStorage.setItem(LOCAL_STORAGE_KEY, response.data.data);
