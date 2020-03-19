@@ -1,5 +1,3 @@
-import {API} from "../api";
-
 export default function layxLoader() {   // <-- 原作者这里使用的是module.exports
     return new Promise((resolve, reject) => {
         if (window.layx) {
