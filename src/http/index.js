@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import HelpConfig from "@itning/axios-helper/dist/HelpConfig";
-import ErrorMessage from "@itning/axios-helper/dist/actuator/message/ErrorMessage";
 
 HelpConfig.errorMsgImpl = {
     showErrorToast(title, data) {
