@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import HelpConfig from "@itning/axios-helper/dist/HelpConfig";
+import ErrorMessage from "@itning/axios-helper/dist/actuator/message/ErrorMessage";
 
 HelpConfig.errorMsgImpl = {
     showErrorToast(title, data) {
@@ -9,7 +10,7 @@ HelpConfig.errorMsgImpl = {
         } else {
             msg = data.msg;
         }
-        Vue.prototype.$notification['error']({
+        Vue.prototype.$notification.error({
             message: title,
             description: msg,
             duration: 4.5,
@@ -40,7 +41,6 @@ HelpConfig.axiosInstanceBuilder
         onFulfilled: response => Promise.resolve(response),
         onRejected: error => {
             if (error.response === undefined) {
-                RequestActuator.errorMessage.showErrorMsg('网络异常', '请检查网络连接状态后再试');
                 return Promise.reject(error);
             }
             if (error.response.status) {
@@ -50,8 +50,7 @@ HelpConfig.axiosInstanceBuilder
                         setTimeout(() => {
                             window.location.href = "/security";
                         }, 2000);
-                        RequestActuator.errorMessage.showOnceErrorMsg('错误', error.response.data.msg);
-                        return;
+                        break;
                     case 403:
                         console.warn('权限不足');
                         break;
