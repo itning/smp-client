@@ -49,7 +49,7 @@
 
 <script>
   import MapLoader from '../http/mapLoader'
-  import {Download, Get, Post} from "../http";
+  import {Download, Get, Post} from "@itning/axios-helper";
   import {API, SERVER_HOST} from "../api";
   import moment from 'moment';
   import 'moment/locale/zh-cn';

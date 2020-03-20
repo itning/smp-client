@@ -35,7 +35,7 @@
 <script>
     import moment from 'moment';
     import 'moment/locale/zh-cn';
-    import {Post} from "../http";
+    import {Post} from "@itning/axios-helper";
     import {API} from "../api";
 
     moment.locale('zh-cn');

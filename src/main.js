@@ -5,6 +5,7 @@ import store from './store'
 import User from './user'
 import VCharts from 'v-charts'
 import Antd from 'ant-design-vue'
+import './http'
 import 'ant-design-vue/dist/antd.less'
 
 Vue.config.productionTip = false;

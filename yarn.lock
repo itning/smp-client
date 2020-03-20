@@ -875,6 +875,13 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
+"@itning/axios-helper@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.npm.taobao.org/@itning/axios-helper/download/@itning/axios-helper-1.0.5.tgz#80133a9c5e78a9938b53009335865261375ddf08"
+  integrity sha1-gBM6nF54qZOLUwCTNYZSYTdd3wg=
+  dependencies:
+    axios "^0.19.2"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npm.taobao.org/@mrmlnc/readdir-enhanced/download/@mrmlnc/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -1674,7 +1681,7 @@ aws4@^1.8.0:
   resolved "https://registry.npm.taobao.org/aws4/download/aws4-1.9.0.tgz#24390e6ad61386b0a747265754d2a17219de862c"
   integrity sha1-JDkOatYThrCnRyZXVNKhchnehiw=
 
-axios@0.19.2:
+axios@^0.19.2:
   version "0.19.2"
   resolved "https://registry.npm.taobao.org/axios/download/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
   integrity sha1-PqNsXYgY0NX4qKl6bTa4bNwAyyc=

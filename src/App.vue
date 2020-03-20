@@ -77,7 +77,7 @@
 </template>
 <script>
   import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
-  import {Post} from "./http";
+  import {Post} from "@itning/axios-helper";
   import {API} from "./api";
 
   export default {

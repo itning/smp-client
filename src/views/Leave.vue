@@ -37,7 +37,7 @@
 <script>
     import moment from 'moment';
     import 'moment/locale/zh-cn';
-    import {Get} from "../http";
+    import {Get} from "@itning/axios-helper";
     import {API} from "../api";
     import Comment from "../components/Comment";
 

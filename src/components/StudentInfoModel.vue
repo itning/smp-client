@@ -47,7 +47,7 @@
 
 <script>
   import InputEdit from "./InputEdit";
-  import {Get, Patch} from "../http";
+  import {Get, Patch} from "@itning/axios-helper";
   import {API} from "../api";
 
   export default {
@@ -91,7 +91,7 @@
         console.log(`更新用户：${this.value.id} 公寓ID：${this.editData.apartmentId}`);
         Patch(API.update_user)
           .withSuccessCode(204)
-          .withJSONData(
+          .withJson(
             {
               id: this.value.id,
               apartment: {id: this.editData.apartmentId}
@@ -116,11 +116,11 @@
         this.value[valueKey] = value;
         Patch(API.update_user)
           .withSuccessCode(204)
-          .withJSONData(data)
+          .withJson(data)
           .do(response => {
             this.$message.success('修改成功');
           })
-          .watchError(errorResponse => {
+          .withErrorHandle(errorResponse => {
             console.log(this.value[valueKey]);
             this.value[valueKey] = oldValue;
           });

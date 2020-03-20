@@ -46,7 +46,7 @@
 </template>
 
 <script>
-  import {Post} from "../http";
+  import {Post} from "@itning/axios-helper";
   import {API} from "../api";
   import {LOCAL_STORAGE_KEY} from "../user";
   import videoLoader from "../http/videoLoader";
@@ -67,7 +67,7 @@
             console.log('Received values of form: ', values);
             Post(API.login)
               .withURLSearchParams({username: values.username, password: values.password})
-              .withOnceErrorToast(true)
+              .withOnceMsg()
               .do(response => {
                 console.log("get token: " + response.data.data);
                 window.localStorage.setItem(LOCAL_STORAGE_KEY, response.data.data);

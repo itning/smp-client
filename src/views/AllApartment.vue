@@ -29,7 +29,7 @@
 
 <script>
   import EditableCell from "../components/EditableCell";
-  import {Del, Get, Patch, Post} from "../http";
+  import {Delete, Get, Patch, Post} from "@itning/axios-helper";
   import {API} from "../api";
 
   export default {
@@ -74,14 +74,14 @@
           target[dataIndex] = value.value;
           Patch(API.update_apartment)
             .withSuccessCode(204)
-            .withJSONData({
+            .withJson({
               id: id,
               name: value.value
             })
             .do(response => {
               this.$message.success('修改成功');
             })
-            .watchError(errorResponse => {
+            .withErrorHandle(errorResponse => {
               target[dataIndex] = value.oldValue;
               this.dataSource = dataSource;
             });
@@ -89,10 +89,12 @@
         }
       },
       onDelete(id) {
-        Del(API.del_apartment + id).withSuccessCode(204).do(respons => {
-          const dataSource = [...this.dataSource];
-          this.dataSource = dataSource.filter(item => item.id !== id);
-        })
+        Delete(API.del_apartment + id)
+          .withSuccessCode(204)
+          .do(response => {
+            const dataSource = [...this.dataSource];
+            this.dataSource = dataSource.filter(item => item.id !== id);
+          })
       },
       handleAdd() {
         if (this.newApartmentName.trim() !== "") {
@@ -113,9 +115,10 @@
         Get(API.apartment)
           .do(response => {
             this.dataSource = response.data.data;
-          }).doAfter(() => {
-          this.loading = false;
-        })
+          })
+          .doAfter(() => {
+            this.loading = false;
+          })
       }
     },
     mounted() {

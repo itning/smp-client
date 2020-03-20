@@ -46,62 +46,62 @@
 </template>
 
 <script>
-    import {Post} from "../http";
-    import {API} from "../api";
+  import {Post} from "@itning/axios-helper";
+  import {API} from "../api";
 
-    export default {
-        name: "NewStudent",
-        data() {
-            return {
-                currentIndex: 0,
-                resultStudentInfo: {}
-            }
-        },
-        methods: {
-            handleReturn() {
-                this.currentIndex = 0;
-                this.resultStudentInfo = {};
-            },
-            beforeUpload(file, fileList) {
-                let exName = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2);
-                if (exName === 'xls' || exName === 'xlsx') {
-                    return true;
-                } else {
-                    this.$notification['error']({
-                        message: '文件不正确，请重新选择',
-                        description: `文件${file.name}不是正确的Excel文件，支持的扩展名：xls或xlsx`,
-                    });
-                    return false;
-                }
-            },
-            customRequest(data) {
-                let progress = {percent: 0};
-                Post(API.upload_user_file)
-                    .withSuccessCode(201)
-                    .withErrorStartMsg("上传失败：")
-                    .withFormData({file: data.file}, true, p => {
-                        progress.percent = p;
-                        if (progress.percent < 100) {
-                            data.onProgress(progress)
-                        } else {
-                            data.onSuccess();
-                        }
-                    })
-                    .do(response => {
-                        if (response.data.data.error === null) {
-                            this.$message.success('上传成功');
-                            this.resultStudentInfo.now = response.data.data.now;
-                            this.resultStudentInfo.total = response.data.data.total;
-                            this.currentIndex = 2;
-                        } else {
-                            this.$message.error('文件有错误，请检查');
-                            this.resultStudentInfo.error = response.data.data.error;
-                            this.currentIndex = 1;
-                        }
-                    })
-            }
+  export default {
+    name: "NewStudent",
+    data() {
+      return {
+        currentIndex: 0,
+        resultStudentInfo: {}
+      }
+    },
+    methods: {
+      handleReturn() {
+        this.currentIndex = 0;
+        this.resultStudentInfo = {};
+      },
+      beforeUpload(file, fileList) {
+        let exName = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2);
+        if (exName === 'xls' || exName === 'xlsx') {
+          return true;
+        } else {
+          this.$notification['error']({
+            message: '文件不正确，请重新选择',
+            description: `文件${file.name}不是正确的Excel文件，支持的扩展名：xls或xlsx`,
+          });
+          return false;
         }
+      },
+      customRequest(data) {
+        let progress = {percent: 0};
+        Post(API.upload_user_file)
+          .withSuccessCode(201)
+          .withErrorStartMsg("上传失败：")
+          .withFormData({file: data.file}, p => {
+            progress.percent = p;
+            if (progress.percent < 100) {
+              data.onProgress(progress)
+            } else {
+              data.onSuccess();
+            }
+          })
+          .do(response => {
+            if (response.data.data.error === null) {
+              this.$message.success('上传成功');
+              this.resultStudentInfo.now = response.data.data.now;
+              this.resultStudentInfo.total = response.data.data.total;
+              this.currentIndex = 2;
+            } else {
+              this.$message.error('文件有错误，请检查');
+              this.resultStudentInfo.error = response.data.data.error;
+              this.currentIndex = 1;
+            }
+          })
+      }
     }
+  }
 </script>
 
 <style scoped>

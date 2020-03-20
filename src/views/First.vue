@@ -42,7 +42,7 @@
 
 <script>
   import VeLine from 'v-charts/lib/line.common'
-  import {Get} from "../http";
+  import {Get} from "@itning/axios-helper";
   import {API} from "../api";
   import moment from 'moment';
   import 'moment/locale/zh-cn';
@@ -151,7 +151,7 @@
        */
       initApartmentChart() {
         Get(API.statistics_apartment)
-          .withOnceErrorToast(true)
+          .withOnceMsg()
           .do(response => {
             this.apartmentStatisticsData.data.rows = response.data.data;
           })
@@ -161,7 +161,7 @@
        */
       initHomeComingChart() {
         Get(API.statistics_home_coming + "?date=" + moment(new Date()).format("YYYY-MM-DD"))
-          .withOnceErrorToast(true)
+          .withOnceMsg()
           .do(response => {
             if (response.data.data.sum === 0) {
               this.roomComingStatisticsData.data.rows[0].percent = 0;
@@ -175,7 +175,7 @@
        */
       initLeaveChart() {
         Get(API.statistics_leave + "?date=" + moment(new Date()).format("YYYY-MM-DD"))
-          .withOnceErrorToast(true)
+          .withOnceMsg()
           .do(response => {
             if (response.data.data.sum === 0) {
               this.leaveStatisticsData.data.rows[0].percent = 0;
@@ -189,7 +189,7 @@
        */
       initClassComingChart() {
         Get(API.statistics_class_coming + "?date=" + moment(new Date()).format("YYYY-MM-DD"))
-          .withOnceErrorToast(true)
+          .withOnceMsg()
           .do(response => {
             if (response.data.data.sum === 0) {
               this.classComingStatisticsData.data.rows[0].percent = 0;
@@ -204,7 +204,7 @@
       initCounselorAllChart(startDate = moment().subtract(1, 'month').format('YYYY-MM-DD'),
                             endDate = moment().format('YYYY-MM-DD')) {
         Get(`${API.statistics_all_counselor}?startDate=${startDate}&endDate=${endDate}`)
-          .withOnceErrorToast(true)
+          .withOnceMsg()
           .do(response => {
             this.allStatisticsData.data.rows = response.data.data.map(d => {
               return {
@@ -230,19 +230,19 @@
 
         function fetchUrl(date, obj, that, index) {
           Get(API.statistics_home_coming + "?date=" + date)
-            .withOnceErrorToast(true)
+            .withOnceMsg()
             .do(response => {
               obj.room = that.percentage(response.data.data.coming, response.data.data.sum);
               that.$set(that.chartData.data.rows, index, obj);
             });
           Get(API.statistics_leave + "?date=" + date)
-            .withOnceErrorToast(true)
+            .withOnceMsg()
             .do(response => {
               obj.leave = that.percentage(response.data.data.leave, response.data.data.sum);
               that.$set(that.chartData.data.rows, index, obj);
             });
           Get(API.statistics_class_coming + "?date=" + date)
-            .withOnceErrorToast(true)
+            .withOnceMsg()
             .do(response => {
               obj.clazz = that.percentage(response.data.data.coming, response.data.data.sum);
               that.$set(that.chartData.data.rows, index, obj);

@@ -45,7 +45,7 @@
 </template>
 
 <script>
-  import {Del, Get, Post} from "../http";
+  import {Delete, Get, Post} from "@itning/axios-helper";
   import {API} from "../api";
   import StudentInfoModel from "../components/StudentInfoModel";
   import moment from 'moment';
@@ -132,7 +132,7 @@
     methods: {
       handleResetPwd() {
         Post(API.reset_password)
-          .withURLSearchParams({studentId: this.showDetailObj.studentId})
+          .withURLSearchParams({'studentId': String(this.showDetailObj.studentId)})
           .withSuccessCode(204)
           .do(response => {
             this.$message.success('成功重置');
@@ -141,7 +141,7 @@
       handleDelStudent() {
         console.log("删除ID:" + this.showDetailObj.id);
         this.isDelLoading = true;
-        Del(API.del_user + this.showDetailObj.id)
+        Delete(API.del_user + this.showDetailObj.id)
           .withSuccessCode(204)
           .do(Response => {
             this.$message.success('成功删除');

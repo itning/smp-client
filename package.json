@@ -1,14 +1,14 @@
 {
   "name": "smp-client",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@itning/axios-helper": "^1.0.5",
     "ant-design-vue": "^1.4.12",
-    "axios": "0.19.2",
     "core-js": "^3.6.4",
     "echarts": "^4.7.0",
     "js-base64": "^2.5.2",
