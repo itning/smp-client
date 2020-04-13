@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <a-locale-provider :locale="locale">
+    <a-config-provider :locale="locale">
       <a-layout style="height: 100%">
         <a-layout-sider :trigger="null" collapsible v-model="collapsed" v-if="show">
           <div class="logo-box">
@@ -68,7 +68,7 @@
           </a-layout-content>
         </a-layout>
       </a-layout>
-    </a-locale-provider>
+    </a-config-provider>
     <a-modal title="修改密码" v-model="showChangePwdModel" :confirmLoading="confirmLoading"
              @ok="handleChangePwd" okText="修改" cancelText="取消">
       <a-input-password placeholder="新密码" v-model="newPwd"/>
