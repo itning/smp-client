@@ -1,6 +1,7 @@
 export const SERVER_HOST = "http://itning:8888";
 export const API = {
-    key: "b03584f2c1c4628823c666f7033a5a93",
+    // 高德地图API KEY
+    aMapKey: "b03584f2c1c4628823c666f7033a5a93",
     users: SERVER_HOST + "/info/users",
     apartment: SERVER_HOST + "/info/apartments",
     search: {
