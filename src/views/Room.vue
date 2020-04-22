@@ -116,7 +116,6 @@
       initPolygon() {
         Get(API.gps_range)
           .do(response => {
-            console.log();
             /*let path = [
                 [127.210157, 45.743361],
                 [127.213485, 45.74255],
@@ -202,7 +201,7 @@
             this.changeCheckTime = date;
           })
       },
-      initCountShouldRoomCheck(date = moment(new Date).format("YYYY-MM-DD")) {
+      initCountShouldRoomCheck(date = moment(new Date()).format("YYYY-MM-DD")) {
         Get(API.countShouldRoomCheck + "?date=" + date)
           .do(response => {
             this.countStudent = response.data.data.t1;
