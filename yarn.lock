@@ -8242,10 +8242,10 @@ vue@2.6.11, vue@^2.5.11:
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha1-dllNh31LEiNEBuhONSdcbVFBJcU=
 
-vuex@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.2.0.tgz?cache=0&sync_timestamp=1587294747726&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvuex%2Fdownload%2Fvuex-3.2.0.tgz#86da7f26c3e131ff374870580109145a640ee5a8"
-  integrity sha1-htp/JsPhMf83SHBYAQkUWmQO5ag=
+vuex@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.3.0.tgz#665b4630ea1347317139fcc5cb495aab3ec5e513"
+  integrity sha1-ZltGMOoTRzFxOfzFy0laqz7F5RM=
 
 warning@^4.0.0:
   version "4.0.3"
