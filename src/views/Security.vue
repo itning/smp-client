@@ -1,8 +1,6 @@
 <template>
   <div>
-    <video id="video-id" muted="true"
-           loop="loop" meted="meted"
-           style="height: 100%;width: 100%;position: fixed;object-fit: fill;top:0;">
+    <video id="video-id" muted loop class="video-info">
       <source src="/video/video.m3u8" type="application/x-mpegURL">
     </video>
     <div class="security_box">
@@ -111,5 +109,13 @@
   .security_box {
     max-width: 400px;
     margin: 200px auto;
+  }
+
+  .video-info {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    object-fit: fill;
+    top: 0;
   }
 </style>
