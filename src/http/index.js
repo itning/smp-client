@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import HelpConfig from "@itning/axios-helper/dist/HelpConfig";
+import {AxiosHelperConfig} from "@itning/axios-helper";
 
-HelpConfig.errorMsgImpl = {
+AxiosHelperConfig.errorMsgImpl = {
     showErrorToast(title, data) {
         let msg;
         if (typeof data === "string") {
@@ -14,12 +14,12 @@ HelpConfig.errorMsgImpl = {
             description: msg,
             duration: 4.5,
             onClose: () => {
-                HelpConfig.onceMsgFinish();
+                AxiosHelperConfig.onceMsgFinish();
             }
         });
     }
 };
-HelpConfig.axiosInstanceBuilder
+AxiosHelperConfig.axiosInstanceBuilder
     .timeOut(1000 * 12)
     .requestInterceptor({
         onFulfilled: request => {
