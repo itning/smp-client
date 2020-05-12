@@ -1,4 +1,4 @@
-# 基于Spring Cloud的学生管理平台
+# 基于Spring Cloud的学生管理平台（前端 Vue.JS）
 
 [![GitHub stars](https://img.shields.io/github/stars/itning/smp-client.svg?style=social&label=Stars)](https://github.com/itning/smp-client/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/itning/smp-client.svg?style=social&label=Fork)](https://github.com/itning/smp-client/network/members)
@@ -11,7 +11,7 @@
 [![GitHub release](https://img.shields.io/github/release/itning/smp-client.svg)](https://github.com/itning/smp-client/releases)
 [![GitHub repo size in bytes](https://img.shields.io/github/repo-size/itning/smp-client.svg)](https://github.com/itning/smp-client)
 [![HitCount](http://hits.dwyl.io/itning/smp-client.svg)](http://hits.dwyl.io/itning/smp-client)
-[![language](https://img.shields.io/badge/language-JAVA-green.svg)](https://github.com/itning/smp-client)
+[![language](https://img.shields.io/badge/language-Vue.JS-green.svg)](https://github.com/itning/smp-client)
 
 ## 工程
 
