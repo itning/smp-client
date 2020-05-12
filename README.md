@@ -94,7 +94,15 @@ yarn serve
 
 ## 预览
 
-![login]()
+![login](https://raw.githubusercontent.com/itning/smp-client/master/pic/login.png)
+
+![first](https://raw.githubusercontent.com/itning/smp-client/master/pic/first.png)
+
+![student](https://raw.githubusercontent.com/itning/smp-client/master/pic/student.png)
+
+![leave](https://raw.githubusercontent.com/itning/smp-client/master/pic/leave.png)
+
+![room](https://raw.githubusercontent.com/itning/smp-client/master/pic/room.png)
 
 ## 版权声明
 
